@@ -1,0 +1,35 @@
+Existem algumas formas de executar o script:
+
+  Dentro do Diretório que possuem os arquivos Nome_do_arquivo.pcr e Nome_do_arquivo.dat digite:
+
+    1) Refinamento.sh Nome_do_arquivo
+
+    2) Refinamento.sh Nome_do_arquivo Tipo
+        Tipo = 1 - Método Rietveld
+             = 4 - Método Lebail
+             = 6 - Método Lebail + Método Rietveld
+
+    3) Refinamento.sh Nome_do_arquivo Tipo ZoomMin ZoomMax
+        Tipo = 1 - Método Rietveld
+             = 4 - Método Lebail
+             = 6 - Método Lebail + Método Rietveld
+        ZoomMin = Valor inicial do Zoom.
+        ZoomMax = Valor final do Zoom.
+
+    4) Refinamento.sh [-l|--list]
+        -l ou --list irá mostrar a lista dos Refinamentos que poderá ser executados
+
+    5) Refinamento.sh [-o|--ordem]
+        -o ou --ordem você poderá ver e alterar a ordem do Refinamento pelo Método Rietveld.
+
+    6) Refinamento.sh --listexec
+        Irá executar o script refinando a lista.
+     
+    7) Refinamento.sh Nome_do_arquivo Tipo [-d|--debug]
+        Usando -d ou --debug no final do comando irá refinar normalmente, mas mostrando trechos da saida na tela.
+        Uso para verificar possíveis erros no Script.
+
+    8) Refinamento.sh [-h|--help]
+        -h ou --help irá abir um documento com ajuda
+
+Lembrando que o Nome do PCR e do DAT tem que estar EXATAMENTE com o MESMO nome!

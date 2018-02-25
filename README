@@ -1,0 +1,40 @@
+Pacotes necessários para rodar perfeitamente o Script:
+  1. gnuplot 
+  2. bc
+  3. unix2dos
+  4. gawk
+	5. dialog
+
+Para instalar esses pacote basta digitar como SuperUsuario:
+
+  # apt-get install nome_do_pacote
+
+Para rodar o Script:
+
+  1. Coloque TODOS os arquivos numa determinada pasta: Ex:
+  
+    /home/guilherme/Documentos/Script
+    
+  2. Precisamos deixar o Arquivo Refinamento.sh no modo Executável:
+  
+    $ chmod 744 Refinamento.sh 
+    
+  3. Criando um caminho para o Script rodar em qualquer diretório:
+  
+    a) Precisaremos modificar o arquivo .bashrc. Para isso digite:
+    
+      $ gedit  ~/.bashrc
+      
+    b) Quando abrir esse arquivo pelo Gedit add no final os comandos as 3 linhas de comando abaixo:
+        SCRIPTSFull=(escreva aqui o caminho que está o Script). Ex:
+        
+        SCRIPTSFull=/home/guilherme/Documentos/Script
+        PATH=$SCRIPTSFull:$PATH
+        export SCRIPTSFull
+        
+  4. Para rodar agora basta entrar na pasta onde está os arquivos .prc e .dat e digite:
+  
+      $ Refinamento.sh nome_da_amostra
+      
+  5. Pronto. Só seguir o Script agora!!
+  
