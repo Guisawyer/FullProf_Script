@@ -17,7 +17,7 @@ Para rodar o Script:
     
   2. Precisamos deixar o Arquivo Refinamento.sh no modo Executável:
   
-    $ chmod 744 Refinamento.sh 
+    $ chmod +x Refinamento.sh 
     
   3. Criando um caminho para o Script rodar em qualquer diretório:
   
