@@ -18,6 +18,9 @@ cp_k=1
 if [[ $LeBail == 0 ]]; then
 	while [ $cp_k -le $(ls $ArqNome?.fst | wc -l) ]; do
 		cp $(echo $ArqNome)$cp_k.fst $(echo $ArqNome)$cp_k-OK.fst
+		if [[ $ColJob12 == 1 ]]; then
+			cp $(echo $ArqNome)$cp_k.mic $(echo $ArqNome)$cp_k-OK.mic
+		fi
 		cp_k=$((cp_k+1))
 	done
 else
@@ -44,6 +47,9 @@ cp_k=1
 if [[ $LeBail == 0 ]]; then
 	while [ $cp_k -le $(ls $ArqNome?.fst | wc -l) ]; do
 		cp $(echo $ArqNome)$cp_k-OK.fst $(echo $ArqNome)$cp_k.fst
+		if [[ $ColJob12 == 1 ]]; then
+			cp $(echo $ArqNome)$cp_k-OK.mic $(echo $ArqNome)$cp_k.mic
+		fi
 		cp_k=$((cp_k+1))
 	done
 else
@@ -71,6 +77,9 @@ cp_k=1
 if [[ $LeBail == 0 ]]; then
 	while [ $cp_k -le $(ls $ArqNome?.fst | wc -l) ]; do
 		cp $(echo $ArqNome)$cp_k.fst $(echo $ArqNome)$cp_k-COND-$i.fst
+		if [[ $ColJob12 == 1 ]]; then
+			cp $(echo $ArqNome)$cp_k.mic $(echo $ArqNome)$cp_k-COND-$i.mic
+		fi
 		cp_k=$((cp_k+1))
 	done
 else
@@ -97,6 +106,9 @@ cp_k=1
 if [[ $LeBail == 0 ]]; then
 	while [ $cp_k -le $(ls $ArqNome?.fst | wc -l) ]; do
 		cp $(echo $ArqNome)$cp_k-COND-$i.fst $(echo $ArqNome)$cp_k.fst
+		if [[ $ColJob12 == 1 ]]; then
+			cp $(echo $ArqNome)$cp_k-COND-$i.mic $(echo $ArqNome)$cp_k.mic
+		fi
 		cp_k=$((cp_k+1))
 	done
 else

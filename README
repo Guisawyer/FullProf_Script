@@ -3,7 +3,7 @@ Pacotes necessários para rodar perfeitamente o Script:
   2. bc
   3. unix2dos
   4. gawk
-  5. dialog
+	5. dialog
 
 Para instalar esses pacote basta digitar como SuperUsuario:
 
@@ -17,7 +17,7 @@ Para rodar o Script:
     
   2. Precisamos deixar o Arquivo Refinamento.sh no modo Executável:
   
-    $ chmod +x Refinamento.sh 
+    $ chmod 744 Refinamento.sh 
     
   3. Criando um caminho para o Script rodar em qualquer diretório:
   

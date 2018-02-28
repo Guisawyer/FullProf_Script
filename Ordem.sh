@@ -20,10 +20,11 @@ PosicaoAtomica            # Refinar as Posições Atômicas #
 Parametro_Ocupacao        # Refinar os Parâmetros de Ocupação
 Parametro_Termico         # Refinar os Parâmetros Térmicos #
 PARAMETRO_ASSIMETRIA      # Refinar os Parâmetros de Assimetrias #
-#Strain_Model          
+#Strain_Model  
+Size_Model        
 
 
-########## --- Refinando o que deram de Errado e Finalizando --- #
+########### --- Refinando o que deram de Errado e Finalizando --- #
 Finalizar_VEC=1
 PARAMETROS_UVW            # Refinar novamente para ver se melhora!! 
 paramBack                 # Refinar o Background #

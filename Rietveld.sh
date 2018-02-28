@@ -31,7 +31,7 @@ LeBail=0 # Modo LeBail Desligado - Metodo Rietvel Ligado!!
 
 # Descobrindo os valores da linha # !Job Npr Nph Nba Nex Nsc Nor Dum Iwg Ilo Ias Res Ste Nre Cry Uni Cor Opt Aut - Para descobrir a quantidade de Fases 
 	linhaJob 
-	LinhaJob=$(echo $ColJob1 $ColJob2 $ColJob3 $ColJob4 $ColJob5 $ColJob6 $ColJob7 1 $ColJob9 $ColJob10 1 $ColJob12 $ColJob13 $ColJob14 $ColJob15 $ColJob16 $ColJob17 $ColJob18 1 )
+	LinhaJob=$(echo $ColJob1 $ColJob2 $ColJob3 $ColJob4 $ColJob5 $ColJob6 $ColJob7 1 $ColJob9 $ColJob10 1 $ColJob12 $ColJob13 $ColJob14 $ColJob15 $ColJob16 $ColJob17 1 1 )
 	sed -i "$LOCJob s/.*/$LinhaJob/" $(echo $ArqNome).pcr
 	linhaJob
 # Aut = 1 - Liberdade para mudar os parâmetros!!

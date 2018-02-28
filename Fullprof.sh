@@ -48,7 +48,7 @@ function MsgPasso(){
 }
 
 function Sair () {
-	rm -f !($ArqNome.dat|$ArqNome.pcr|$ArqNome.png) &> /dev/null
+	rm -f !($ArqNome.dat|$ArqNome.pcr|$ArqNome.png|$ArqNome.irf) &> /dev/null
 	exit 1
 }
 
@@ -732,10 +732,10 @@ function PARAMETRO_ASSIMETRIA () {
 		paramAss2 
 		paramAss3 
 		paramAss4 
-#		if [[ $ColJob2 == 7 ]] ; then
-#			paramS_L      
-#			paramD_L
-#		fi
+		if [[ $ColJob2 == 7 ]] ; then
+			paramS_L      
+			paramD_L
+		fi
 		fase=$((fase +1))
 	done
 }
@@ -1796,6 +1796,145 @@ function Strain_Model () {
 	done
 }
 
+function paramSM1 () {
+	nome="fase=$fase; paramSM1"
+	NomeFase
+	Parametro
+	Linha_Size_Model
+	Rodar $CalParam1 MsgFunc1 ${Nome_Parametro[0]} Parametro_1_6 Linha_Size_Model Parametro_0_6_1
+}
+
+function paramSM2 () {
+	nome="fase=$fase; paramSM2"
+	NomeFase
+	Parametro
+	Linha_Size_Model
+	Rodar $CalParam2 MsgFunc1 ${Nome_Parametro[1]} Parametro_2_6 Linha_Size_Model Parametro_0_6_1
+}
+function paramSM3 () {
+	nome="fase=$fase; paramSM3"
+	NomeFase
+	Parametro
+	Linha_Size_Model
+	Rodar $CalParam3 MsgFunc1 ${Nome_Parametro[2]} Parametro_3_6 Linha_Size_Model Parametro_0_6_1
+}
+function paramSM4 () {
+	nome="fase=$fase; paramSM4"
+	NomeFase
+	Parametro
+	Linha_Size_Model
+	Rodar $CalParam4 MsgFunc1 ${Nome_Parametro[3]} Parametro_4_6 Linha_Size_Model Parametro_0_6_1
+}
+function paramSM5 () {
+	nome="fase=$fase; paramSM5"
+	NomeFase
+	Parametro
+	Linha_Size_Model
+	Rodar $CalParam5 MsgFunc1 ${Nome_Parametro[4]} Parametro_5_6 Linha_Size_Model Parametro_0_6_1
+}
+function paramSM6 () {
+	nome="fase=$fase; paramSM6"
+	NomeFase
+	Parametro
+	Linha_Size_Model
+	Rodar $CalParam6 MsgFunc1 ${Nome_Parametro[5]} Parametro_6_6 Linha_Size_Model Parametro_0_6_1
+}
+
+function paramSM7 () {
+	nome="fase=$fase; paramSM7"
+	NomeFase
+	Parametro
+	Linha_Size_Model_21
+	Rodar $CalParam1 MsgFunc1 ${Nome_Parametro[0]} Parametro_1_2 Linha_Size_Model_21 Parametro_0_2
+}
+
+function paramSM8 () {
+	nome="fase=$fase; paramSM8"
+	NomeFase
+	Parametro
+	Linha_Size_Model_21
+	Rodar $CalParam2 MsgFunc1 ${Nome_Parametro[1]} Parametro_2_2 Linha_Size_Model_21 Parametro_0_2
+}
+
+function paramSM1_17 () {
+	nome="fase=$fase; paramSM1_17"
+	NomeFase
+	Parametro
+	Linha_Size_Model_17
+	Rodar $CalParam1 MsgFunc1 ${Nome_Parametro[0]} Parametro_1_5 Linha_Size_Model_17 Parametro_0_5
+}
+
+function paramSM2_17 () {
+	nome="fase=$fase; paramSM2_17"
+	NomeFase
+	Parametro
+	Linha_Size_Model_17
+	Rodar $CalParam2 MsgFunc1 ${Nome_Parametro[1]} Parametro_2_5 Linha_Size_Model_17 Parametro_0_5
+}
+
+function paramSM3_17 () {
+	nome="fase=$fase; paramSM3_17"
+	NomeFase
+	Parametro
+	Linha_Size_Model_17
+	Rodar $CalParam3 MsgFunc1 ${Nome_Parametro[2]} Parametro_3_5 Linha_Size_Model_17 Parametro_0_5
+}
+
+function paramSM4_17 () {
+	nome="fase=$fase; paramSM4_17"
+	NomeFase
+	Parametro
+	Linha_Size_Model_17
+	Rodar $CalParam4 MsgFunc1 ${Nome_Parametro[3]} Parametro_4_5 Linha_Size_Model_17 Parametro_0_5
+}
+
+function paramSM5_17 () {
+	nome="fase=$fase; paramSM5_17"
+	NomeFase
+	Parametro
+	Linha_Size_Model_17
+	Rodar $CalParam5 MsgFunc1 ${Nome_Parametro[4]} Parametro_5_5 Linha_Size_Model_17 Parametro_0_5
+}
+
+function Size_Model () {
+	fase=1
+	while [ $fase -le $ColJob3 ] ; do
+		linhaUVW
+		ModelSizeLaue=$(echo $CalVal8)
+		echo $ModelSizeLaue
+			case $ModelSizeLaue in
+				18)
+					paramSM1
+					paramSM2
+					paramSM3
+					paramSM4
+					paramSM5
+					paramSM6
+				;;
+				17)
+					paramSM1_17
+					paramSM2_17
+					paramSM3_17
+					paramSM4_17
+					paramSM5_17
+				;;
+				21)
+					paramSM1
+					paramSM2
+					paramSM3
+					paramSM4
+					paramSM5
+					paramSM6
+					paramSM7
+					paramSM8
+				;;
+				*)
+					echo -e "\033[01;31mSize Model não implementado no Script.\033[0m"
+				;;
+			esac
+		fase=$((fase +1))
+	done
+}
 #############################
 # Finalizando o Refinamento #
 #############################

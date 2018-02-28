@@ -164,6 +164,39 @@ function linhaUVW (){
 	Param
 }
 
+function Linha_Size_Model (){
+	Nome_Parametro=($(grep Y00 $ArqNome.pcr | cut -f2 -d"!"))
+	LOC=$(grep -n "Y00" $(echo $ArqNome).pcr | cut -f1 -d":" | sed -n ${fase}p )
+	LOC_Val=$((LOC + 1))
+	LOC_Parm=$((LOC + 2))
+	Val
+	Param
+}
+
+function Linha_Size_Model_21 (){
+	Nome_Parametro=($(grep Y64 $ArqNome.pcr | cut -f2 -d"!"))
+	LOC=$(grep -n "Y64" $(echo $ArqNome).pcr | cut -f1 -d":" | sed -n ${fase}p )
+	LOC_Val=$((LOC + 1))
+	LOC_Parm=$((LOC + 2))
+	Val
+	Param
+}
+
+
+function Linha_Size_Model_17 (){
+	Nome_Parametro=($(grep K00 $ArqNome.pcr | cut -f2 -d"!"))
+	VecLocM=$(grep -n "K00" $(echo $ArqNome).pcr | cut -f1 -d":" | wc -l )
+	if [[ $VecLocM == $ColJob3 ]] ; then
+		LOC=$(grep -n "K00" $(echo $ArqNome).pcr | cut -f1 -d":" | sed -n ${fase}p )
+	else
+		LOC=$(grep -n "K00" $(echo $ArqNome).pcr | cut -f1 -d":" | sed -n ${VecLocM}p )
+	fi
+	LOC_Val=$((LOC + 1))
+	LOC_Parm=$((LOC + 2))
+	Val
+	Param
+}
+
 function linhaABC () {
 	Nome_Parametro=(a b c alpha beta gamma)
 	LOC=$(grep -n "!     a " $(echo $ArqNome).pcr | cut -f1 -d":" | sed -n ${fase}p )
@@ -348,6 +381,22 @@ function linha_Strain_Model4 () {
 	ColStrainP4=$(echo $Linha_Parm_Strain | cut -f4 -d" ") # S_202
 
 }
+
+function Parametro_0_2 (){ # Primeiro Parâmetro de 6
+	LINHA_Parm=$(echo 0.00  0.00 )
+	sed -i "$LOC_Parm s/.*/$LINHA_Parm/" $(echo $ArqNome).pcr
+}
+
+function Parametro_1_2 (){ # Primeiro Parâmetro de 6
+	LINHA_Parm=$(echo $(echo $PP) $CalParam2 )
+	sed -i "$LOC_Parm s/.*/$LINHA_Parm/" $(echo $ArqNome).pcr
+}
+
+function Parametro_2_2 (){ # Primeiro Parâmetro de 6
+	LINHA_Parm=$(echo $CalParam1 $(echo $PP) )
+	sed -i "$LOC_Parm s/.*/$LINHA_Parm/" $(echo $ArqNome).pcr
+}
+
 
 function Parametro_0_5 (){ # Primeiro Parâmetro de 6
 	LINHA_Parm=$(echo 0.00  0.00  0.00  0.00  0.00 )
