@@ -1,4 +1,4 @@
-# --- Modo de Refinamento dos Parâmetros Térmicos e Ocupação --- #
+#Git23 --- Modo de Refinamento dos Parâmetros Térmicos e Ocupação --- #
 # Quando igual a 0 (zero) é modo Manual, irá refinar testando varios valores e pegará o melhor. Igual a 1 (um) irá refinar normalmente.
 # Quando igual a 1 corre um risco de dar valor inapropriado!! Se colocar valor diferente de 0 ou 1, será considerado como 0.
 UVW_Padrao=1   # Se Igual a 1 usará valores do Padrão do DRX do H-57! 
