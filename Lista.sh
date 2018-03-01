@@ -34,13 +34,6 @@ ZooMMin=""
 ZooMMax=""
 Refinar_Lista
 
-Caminho_Arquivo=$Caminho_Geral/Padrao
-Nome_Arquivo=Si
-Tipo=1
-ZooMMin=""
-ZooMMax=""
-Refinar_Lista
-
 
 Caminho_Arquivo=$Caminho_Geral/Strain
 Nome_Arquivo=BTNN20_80

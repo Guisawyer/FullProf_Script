@@ -470,6 +470,11 @@ function Parametro_0_7 (){ # Primeiro Parâmetro de 6
 	sed -i "$LOC_Parm s/.*/$LINHA_Parm/" $(echo $ArqNome).pcr
 }
 
+function Parametro_0_7_1 (){ # Primeiro Parâmetro de 6
+	LINHA_Parm=$(echo 0.00  0.00  0.00  $CalParam4 $CalParam5 $CalParam6 $CalParam7 )
+	sed -i "$LOC_Parm s/.*/$LINHA_Parm/" $(echo $ArqNome).pcr
+}
+
 function Parametro_1_7 (){ # Primeiro Parâmetro de 6
 	LINHA_Parm=$(echo $(echo $PP) $CalParam2 $CalParam3 $CalParam4 $CalParam5 $CalParam6 $CalParam7)
 	sed -i "$LOC_Parm s/.*/$LINHA_Parm/" $(echo $ArqNome).pcr

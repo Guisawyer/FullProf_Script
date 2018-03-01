@@ -29,7 +29,11 @@ Existem algumas formas de executar o script:
         Usando -d ou --debug no final do comando irá refinar normalmente, mas mostrando trechos da saida na tela.
         Uso para verificar possíveis erros no Script.
 
-    8) Refinamento.sh [-h|--help]
+    8) Refinamento.sh Nome_do_arquivo Tipo -z
+        Refina um parâmetro por vez. Somente a escala que fica ativada durante todo o processo. E no final o Background.
+        
+    9) Refinamento.sh [-h|--help]
         -h ou --help irá abir um documento com ajuda
 
 Lembrando que o Nome do PCR e do DAT tem que estar EXATAMENTE com o MESMO nome!
+
