@@ -80,17 +80,15 @@ LeBail=0 # Modo LeBail Desligado - Metodo Rietvel Ligado!!
 		fase=$((fase +1))
 	done
 	fase=1
-	
-	if [[ $UVW_Padrao == 1 ]]; then
-		while [ $fase -le $ColJob3 ] ; do
-			linhaUVW          
-			LINHA_Val=$(echo  0.031239  -0.040501   0.031429  $CalVal4 $CalVal5 $CalVal6 $CalVal7 $CalVal8 )
-			sed -i "$LOC_Val s/.*/$LINHA_Val/" $(echo $ArqNome).pcr
-			fase=$((fase +1))
-		done
-		fase=1
-	fi
 
+#	while [ $fase -le $ColJob3 ] ; do
+#		linhaUVW           
+#		LINHA_Val=$(echo 0.006872  -0.019632   0.017920  $CalVal4 $CalVal5 $CalVal6 $CalVal7 $CalVal8 )
+#		sed -i "$LOC_Val s/.*/$LINHA_Val/" $(echo $ArqNome).pcr
+#		fase=$((fase +1))
+#	done
+#	fase=1
+	
 	Verif_Shape
 
 # - Salvando o PCR com as alterações iniciais

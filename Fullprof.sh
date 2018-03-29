@@ -22,6 +22,7 @@ Shape_Mode=0
 Atomo_Mode=0
 OCC_MODE=0
 Finalizar_VEC=0
+ParamUVW=0
 
 function MsgErro(){
 	echo -e "\033[01;31m$1\033[0m" 
@@ -65,6 +66,7 @@ function Salve_Erros () {
 		echo "$nome" >> Erro4.sh
 	fi
 }
+
 
 function Verif_Shape (){
 	if [ $ColJob2 != 7 ] ; then  
@@ -382,7 +384,7 @@ function Rodar (){ #$CalVal2 MsgFunc2 ${Nome_Parametro[0]} Parametro_2_9
 		$4
 		fullprof
 		
-		if [[ $ZeroPara == 1 ]] ; then
+		if [[ $ZeroPara == 1 || $ParamUVW == 1 ]] ; then
 			$5
 			$6
 			cpOK
@@ -470,12 +472,12 @@ function PARAMETROS_REDE () {
 ###############
 
 function paramW () {
-#	nome="fase=$fase; paramW"
-  nome=""
+	nome="fase=$fase; paramW"
+ # nome=""
 	NomeFase
 	Parametro
 	linhaUVW
-	Rodar $CalParam3 MsgFunc1 ${Nome_Parametro[2]} Parametro_3_7 linhaUVW Parametro_0_7
+	Rodar $CalParam3 MsgFunc1 ${Nome_Parametro[2]} Parametro_3_7 linhaUVW Parametro_0_7_1
 }
 
 ###############
@@ -483,12 +485,12 @@ function paramW () {
 ###############
 
 function paramV () {
-#	nome="fase=$fase; paramV"
-  nome=""
+	nome="fase=$fase; paramV"
+ # nome=""
 	NomeFase
 	Parametro
 	linhaUVW
-	Rodar $CalParam2 MsgFunc1 ${Nome_Parametro[1]} Parametro_2_7 linhaUVW Parametro_0_7
+	Rodar $CalParam2 MsgFunc1 ${Nome_Parametro[1]} Parametro_2_7 linhaUVW Parametro_0_7_1
 }
 
 ###############
@@ -496,12 +498,12 @@ function paramV () {
 ###############
 
 function paramU () {
-#	nome="fase=$fase; paramU"
-	nome=""
+	nome="fase=$fase; paramU"
+	#nome=""
 	NomeFase
 	Parametro
 	linhaUVW
-	Rodar $CalParam1 MsgFunc1 ${Nome_Parametro[0]} Parametro_1_7 linhaUVW Parametro_0_7
+	Rodar $CalParam1 MsgFunc1 ${Nome_Parametro[0]} Parametro_1_7 linhaUVW Parametro_0_7_1
 }
 
 function paramUVWZERAR () {
@@ -529,20 +531,15 @@ function paramUVWZERAR () {
 }
 
 function PARAMETROS_UVW () {
-	UVWPassarReto=1
+	ParamUVW=1
 	fase=1
 	while [ $fase -le $ColJob3 ] ; do
 		paramW
 		paramV
 		paramU
-#		if [[ $Finalizar_VEC == 0 ]] ; then
-#			paramUVWZERAR
-#			echo -e "\033[02;32mTravando os Parâmetros UVW. Refinando...\033[0m"
-#			fullprof
-#		fi
 		fase=$((fase +1))
 	done
-	UVWPassarReto=0
+	ParamUVW=0
 }
 
 ##################
@@ -647,6 +644,31 @@ function PARAMETROS_XY () {
 	fase=1
 	while [ $fase -le $ColJob3 ] ; do
 		paramY
+		fase=$((fase +1))
+	done
+}
+
+function GauSiz () {
+	nome="fase=$fase; GauSiz"
+	NomeFase
+	Parametro
+	linhaUVW
+	Rodar $CalParam6 MsgFunc1 ${Nome_Parametro[5]} Parametro_6_7 linhaUVW Parametro_0_7
+}
+
+function LorSiz () {
+	nome="fase=$fase; LorSiz"
+	NomeFase
+	Parametro
+	linhaUVW
+	Rodar $CalParam7 MsgFunc1 ${Nome_Parametro[6]} Parametro_7_7 linhaUVW Parametro_0_7
+}
+
+function PARAMETRO_GauSiz_LorSiz () {
+	fase=1
+	while [ $fase -le $ColJob3 ] ; do
+		GauSiz 
+		LorSiz 
 		fase=$((fase +1))
 	done
 }
@@ -1791,6 +1813,7 @@ function Strain_Model () {
 			esac
 		else
 			echo -e "\033[01;31mOpção de Strain não Ativada!!\033[0m"
+			echo -e "\033[02;32mVeja na pag. 119 do Manual do FullProf como implementar no arquivo $ArqNome.pcr.\033[0m\n"
 		fi
 		fase=$((fase +1))
 	done
@@ -1901,8 +1924,11 @@ function Size_Model () {
 	while [ $fase -le $ColJob3 ] ; do
 		linhaUVW
 		ModelSizeLaue=$(echo $CalVal8)
-		echo $ModelSizeLaue
 			case $ModelSizeLaue in
+				0)
+					echo -e "\033[01;31mSize Model não Ativado no PCR.\033[0m"
+					echo -e "\033[02;32mVeja na pag. 117 do Manual do FullProf como implementar no arquivo $ArqNome.pcr.\033[0m\n"
+				;;
 				18)
 					paramSM1
 					paramSM2

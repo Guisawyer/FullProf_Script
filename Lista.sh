@@ -7,13 +7,20 @@ function Refinar_Lista () {
 	cd $Caminho_Arquivo
 	Camin=$(pwd)
   echo -ne "\033]0; Executando Lista ($Num_List/$Num_List_Total) : $(echo $Camin)\007"
-	Refinamento.sh $Nome_Arquivo $Tipo -z | tee Final
+	Refinamento.sh $Nome_Arquivo $Tipo | tee Final
 	Num_List=$((Num_List + 1))
 }
-Caminho_Geral=/home/guilherme/Documentos/Script
+Caminho_Geral=/home/guilherme/Documentos/Script2
 
 
 Caminho_Arquivo=$Caminho_Geral/1Fase
+Nome_Arquivo=AFO
+Tipo=1
+ZooMMin=""
+ZooMMax=""
+Refinar_Lista
+
+Caminho_Arquivo=$Caminho_Geral/1Fase/1
 Nome_Arquivo=AFO
 Tipo=1
 ZooMMin=""
@@ -27,12 +34,20 @@ ZooMMin=""
 ZooMMax=""
 Refinar_Lista
 
+Caminho_Arquivo=$Caminho_Geral/2Fase/1
+Nome_Arquivo=BTNN20_80
+Tipo=1
+ZooMMin=""
+ZooMMax=""
+Refinar_Lista
+
 Caminho_Arquivo=$Caminho_Geral/Beta
 Nome_Arquivo=29
 Tipo=1
 ZooMMin=""
 ZooMMax=""
 Refinar_Lista
+
 
 Caminho_Arquivo=$Caminho_Geral/Padrao
 Nome_Arquivo=Si
@@ -41,9 +56,8 @@ ZooMMin=""
 ZooMMax=""
 Refinar_Lista
 
-
-Caminho_Arquivo=$Caminho_Geral/Strain
-Nome_Arquivo=BTNN20_80
+Caminho_Arquivo=$Caminho_Geral/Padrao/1
+Nome_Arquivo=Si
 Tipo=1
 ZooMMin=""
 ZooMMax=""
