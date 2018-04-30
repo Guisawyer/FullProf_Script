@@ -7,7 +7,7 @@
 LeBail=0 # Modo LeBail Desligado - Metodo Rietvel Ligado!!
 # Alterando a forma de saida:
 	linhaIpr
-	LinhaIpr=$(echo "$ColIpr1 $ColIpr2 0 0 2 $ColIpr6 $ColIpr7 $ColIpr8 $ColIpr9 5 $ColIpr11 2 1 3 4 1 $ColIpr17")
+	LinhaIpr=$(echo "$ColIpr1 $ColIpr2 0 0 2 $ColIpr6 $ColIpr7 $ColIpr8 $ColIpr9 5 $ColIpr11 2 1 1 4 1 $ColIpr17")
 	sed -i "$LOCIpr s/.*/$LinhaIpr/" $(echo $ArqNome).pcr
 	linhaIpr
 # Prf: ColIpr10 --> 5 - Saida gera dois arquivos  .pl1 e .pl2 para gerar os gráficos no GNUplot. Padrão = 1 - Para gerar o .prf

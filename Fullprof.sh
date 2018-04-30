@@ -2046,13 +2046,13 @@ function Finalizando () {
 	fullprof
 #	fullprof
 	linhaIpr
-	LinhaIpr=$(echo "$ColIpr1 $ColIpr2 $ColIpr3 $ColIpr4 $ColIpr5 $ColIpr6 $ColIpr7 $ColIpr8 $ColIpr9 1 $ColIpr11 -1 1 3 4 1 $ColIpr17")
+	LinhaIpr=$(echo "$ColIpr1 $ColIpr2 $ColIpr3 $ColIpr4 $ColIpr5 $ColIpr6 $ColIpr7 $ColIpr8 $ColIpr9 1 $ColIpr11 -1 1 1 4 1 $ColIpr17")
 	sed -i "$LOCIpr s/.*/$LinhaIpr/" $(echo $ArqNome).pcr
 	linhaIpr
 	echo -e "\033[02;32mGerando os Arquivos: \n \033[02;34m\\u2623 $(echo $ArqNome).cif \n \\u2623 $(echo $ArqNome).prf \033[0m"
 	fullprof
-
-# --- Fazendo os Arquivos Legiveis para Usuário Windows!! --- #
+	source Size.sh
+	# --- Fazendo os Arquivos Legiveis para Usuário Windows!! --- #
 	unix2dos $(echo $ArqNome).pcr  &> /dev/null
 	unix2dos $(echo $ArqNome).out  &> /dev/null
 	

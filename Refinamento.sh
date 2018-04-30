@@ -152,7 +152,10 @@ function Criando_Files (){
 	function NomeFase (){
 		temp_nome=$(grep -n "Nat " $(echo $ArqNome).pcr | cut -f1 -d":" | sed -n ${fase}p)
 		temp_nome=$((temp_nome - 2))
-		nome_fase=$(sed -n ${temp_nome}p $(echo $ArqNome).pcr)
+		nome_fase1=$(sed -n ${temp_nome}p $(echo $ArqNome).pcr)
+		nome_fase=$(sed -n ${temp_nome}p $(echo $ArqNome).pcr | sed "s/ //g" )
+		sed -i "${temp_nome} s/$nome_fase1/$nome_fase/" $(echo $ArqNome).pcr
+		
 	}
 
 	linhaJob
@@ -177,6 +180,7 @@ function Criando_Files (){
 
   cp $CaminhoScript/DRX.plt .
 	cp $CaminhoScript/Refinamento.plt .
+	cp $CaminhoScript/Size.plt .
 	Criando_Files
 
 	if [[ $# -ne 4 ]];	then
