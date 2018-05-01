@@ -6,12 +6,22 @@
 # Notas							:  
 
 NPH=$(grep -n Phase $(echo $ArqNome).hkl | wc -l)
+
 for j in $(seq 1 $NPH) ; do
 
 	Val1=$(grep -n Phase $(echo $ArqNome).hkl | cut -f1 -d":" | sed -n ${j}p )
-	Reflection=$(sed -n "${Val1}p" $(echo $ArqNome).hkl | awk {'print $5'})
+	k=$((j+1))
+	Veck=$(echo "$k > $NPH" | bc)
+  if [[ $Veck == 1 ]] ; then
+		Reflection=$(wc -l $(echo $ArqNome).hkl | cut -f1 -d" ")
+	else
+		Val2=$(grep -n Phase $(echo $ArqNome).hkl | cut -f1 -d":" | sed -n ${k}p )
+		Reflection=$((Val2 -1))
+	fi
+	
+	#Reflection=$(sed -n "${Val1}p" $(echo $ArqNome).hkl | awk {'print $5'})
 	Val1=$((Val1 + 3))
-	Reflection=$((Reflection + Val1))
+	#Reflection=$((Reflection + Val1))
 	sed -n "$Val1,$Reflection p" $(echo $ArqNome).hkl > HKL_Phase${j}
   awk '{print $7,$8, $10}' HKL_Phase${j} | sort -k3 -nr | head -15 > DadosSize${j}.txt
 	rm -f Size${j}.dat
