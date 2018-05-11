@@ -13,15 +13,15 @@ PARAMETROS_UVW               ### Refinar a Largura à Meia Altura dos Picos por 
 PARAMETRO_SHAPE              ### Refinar o Shape #
 PARAMETROS_XY                ### Refinar o X e Y #
 PARAMETROS_REDE              ### Refinar os Parâmetros da Célula Unitária (a, b e c) #
-#paramSyCos                   ### Refinar Cos #
-#paramSySin                   ### Refinar Sin #
-#Strain_Model                 ### Refina Strain Model
-#PARAMETRO_GauSiz_LorSiz      ### Refina os parâmetros Gaussiano e Lorentziano
-#Size_Model                   ### Refina o Size Model
-#PosicaoAtomica               ### Refinar as Posições Atômicas #
-#Parametro_Ocupacao           ### Refinar os Parâmetros de Ocupação
-#Parametro_Termico            ### Refinar os Parâmetros Térmicos #
-#PARAMETRO_ASSIMETRIA         ### Refinar os Parâmetros de Assimetrias #
+paramSyCos                   ### Refinar Cos #
+paramSySin                   ### Refinar Sin #
+Strain_Model                 ### Refina Strain Model
+PARAMETRO_GauSiz_LorSiz      ### Refina os parâmetros Gaussiano e Lorentziano
+Size_Model                   ### Refina o Size Model
+PosicaoAtomica               ### Refinar as Posições Atômicas #
+Parametro_Ocupacao           ### Refinar os Parâmetros de Ocupação
+Parametro_Termico            ### Refinar os Parâmetros Térmicos #
+PARAMETRO_ASSIMETRIA         ### Refinar os Parâmetros de Assimetrias #
       
 
 

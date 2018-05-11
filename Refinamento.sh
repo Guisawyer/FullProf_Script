@@ -173,7 +173,7 @@ function Criando_Files (){
 		done
 	fase=1
 
-	rm -f Erro4.sh
+	rm -f Erro*.sh
 
 	mkdir -p PCR-Bkp
 	cp $ArqNome.pcr PCR-Bkp

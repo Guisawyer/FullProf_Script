@@ -151,14 +151,14 @@ function verif_chi () {
 	else
 		Verif_Chi_Valor=0 # Deu Certo
 		Verif_Chi_Valor1=0
-		if [[ $Run_OK == 0 ]]; then
+		if [[ $Run_OK == 1 ]]; then
 			if [[ $COND == 0 ]];then
 				CHI=$CHINOVO
 				echo -e "\n   \033[02;34mConvergiu com Chi² = \033[02;34;1m$CHI\033[0m\n"
 				conta_passo=0.9
 				cpOK
 			else
-				if [[ $(echo "scale=4; $CHINOVO < $CHI*1.02" | bc -l ) -eq 1 ]]; then 
+				if [[ $(echo "scale=4; $CHINOVO < $CHI*1.01" | bc -l ) -eq 1 ]]; then 
 					echo -e -n "\033[02;36;1m$i\033[01;39;1m|\033[0m"
 					if [[ $OCC_MODE == 0 ]];then
 						cpOK
@@ -187,7 +187,7 @@ function convergencia () {
 			rm $(echo $ArqNome).pcr
 			mv $(echo $ArqNome).new $(echo $ArqNome).pcr
 		fi
-		if [[ $Run_OK == 0 ]]; then
+		if [[ $Run_OK == 1 ]]; then
 			RUN=$((RUN +1 ))
 			echo -e "\n   \033[02;34mConvergiu com Chi² = $CHI\033[0m\n"
 			cpOK
@@ -326,11 +326,12 @@ function verificar () {
 
 function fullprof () {
 	Run_OK=0
-	while [ $Run_OK -le 0 ]; do
+	while [ $Run_OK -le 1 ]; do
 		fp2k $(echo $ArqNome) > saida
 	if [[ $Debug == 1 ]]; then
   	grep -B 15 CPU saida    # Verificar a saida
     grep -B 7 overlap saida # Verificar a saida
+    grep -B 7 REFLECTIONS saida
   fi
 		verificar
 		if [[ $Verif_Chi_Valor != 0 ]]; then
@@ -1485,7 +1486,7 @@ function Strain_Model13_2 () {
 		else
 			MsgPasso $conta_passo
 		fi
-		Linha_Parm_Strain=$(echo $ColStrainP1 $(echo $PP) $)
+		Linha_Parm_Strain=$(echo $ColStrainP1 $(echo $PP) )
 		sed -i "$LOC_Parm_Strain s/.*/$Linha_Parm_Strain/" $(echo $ArqNome).pcr
 		fullprof
 	fi
