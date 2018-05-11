@@ -105,6 +105,15 @@ function Vec_Pos_Atomica () {
 		VEC_linhaATOM
 		VEC_AtomNumero=1
 		while [ $VEC_AtomNumero -le $VEC_ColNat1 ] ; do
+		
+		
+		if [[ $(echo "scale=4; $(echo $VEC_ColAtom3 | wc -c)  > 9 " | bc -l  ) -eq 1 || $(echo "scale=4; $(echo $VEC_ColAtom4 | wc -c)  > 9 " | bc     -l  ) -eq 1 || $(echo "scale=4; $(echo $VEC_ColAtom5 | wc -c)  > 9 " | bc -l  ) -eq 1 ]] ;then
+			Pos_Atomic_Exc=1
+			if [[ $RUN == 0 ]]; then
+					MsgErro "Verifeque seu PCR. Existem posições Atômicas com valores Estranhos!!" 
+					exit 1
+			fi
+		else
 			if [[ $(echo "scale=4; $VEC_ColAtom3  > 1.2 " | bc -l ) -eq 1 || $(echo "scale=4; $VEC_ColAtom4  > 1.2 " | bc -l ) -eq 1 || $(echo "scale=4; $VEC_ColAtom5  > 1.2 " | bc -l ) -eq 1 ]];then
 				Pos_Atomic_Exc=1
 				if [[ $RUN == 0 ]]; then
@@ -112,6 +121,7 @@ function Vec_Pos_Atomica () {
 					exit 1
 				fi
 			fi
+		fi
 			VEC_LOC_Val_Atom=$((VEC_LOC_Val_Atom + (2+ 2*VEC_BETA) ))
 			VEC_linhaATOM
 			VEC_AtomNumero=$((VEC_AtomNumero +1))
@@ -141,14 +151,14 @@ function verif_chi () {
 	else
 		Verif_Chi_Valor=0 # Deu Certo
 		Verif_Chi_Valor1=0
-		if [[ $Run_OK == 3 ]]; then
+		if [[ $Run_OK == 0 ]]; then
 			if [[ $COND == 0 ]];then
 				CHI=$CHINOVO
 				echo -e "\n   \033[02;34mConvergiu com Chi² = \033[02;34;1m$CHI\033[0m\n"
 				conta_passo=0.9
 				cpOK
 			else
-				if [[ $(echo "scale=4; $CHINOVO < $CHI" | bc -l ) -eq 1 ]]; then 
+				if [[ $(echo "scale=4; $CHINOVO < $CHI*1.02" | bc -l ) -eq 1 ]]; then 
 					echo -e -n "\033[02;36;1m$i\033[01;39;1m|\033[0m"
 					if [[ $OCC_MODE == 0 ]];then
 						cpOK
@@ -177,7 +187,7 @@ function convergencia () {
 			rm $(echo $ArqNome).pcr
 			mv $(echo $ArqNome).new $(echo $ArqNome).pcr
 		fi
-		if [[ $Run_OK == 3 ]]; then
+		if [[ $Run_OK == 0 ]]; then
 			RUN=$((RUN +1 ))
 			echo -e "\n   \033[02;34mConvergiu com Chi² = $CHI\033[0m\n"
 			cpOK
@@ -211,6 +221,7 @@ function MudarPasso () {
 }
 
 function verificar () {	
+
 	Passo_OK=0
 	Verif_Chi_Valor=1  # Deu ruim!!
 	Verif_Chi_Valor1=1
@@ -238,10 +249,12 @@ function verificar () {
 			Vec_Pos_Atomica
 		fi
 	fi
-
+	
 	if [[ -n "$normal_end" && -z "$NaN" && -z "$NaN2" && "$Vec_Shape_Val" == 0 && "$Verif_Biso_Val" == 0 && -z "$NegativeGAUSSIAN" && -z "$Fractional" && "$Pos_Atomic_Exc" == 0 && -z "$Asterisco" ]] ;	then
 		conv=$(grep "Convergence reached" saida)
+
 		if [[ -n $conv ]] ;	then 
+
 			convergencia
 
 			passo=0
@@ -256,6 +269,7 @@ function verificar () {
 						Passo_OK=1 # Tudo Ok!! 
 					fi
 				else
+
 					if [[ $COND == 1 && $COND1 == 1 ]];then
 						echo -e -n "\033[02;31m$i\033[01;39;1m|\033[0m"
 						recuperecpOK
@@ -312,7 +326,7 @@ function verificar () {
 
 function fullprof () {
 	Run_OK=0
-	while [ $Run_OK -le 3 ]; do
+	while [ $Run_OK -le 0 ]; do
 		fp2k $(echo $ArqNome) > saida
 	if [[ $Debug == 1 ]]; then
   	grep -B 15 CPU saida    # Verificar a saida
@@ -473,7 +487,7 @@ function PARAMETROS_REDE () {
 
 function paramW () {
 	nome="fase=$fase; paramW"
- # nome=""
+  nome=""
 	NomeFase
 	Parametro
 	linhaUVW
@@ -486,7 +500,7 @@ function paramW () {
 
 function paramV () {
 	nome="fase=$fase; paramV"
- # nome=""
+  nome=""
 	NomeFase
 	Parametro
 	linhaUVW
@@ -499,7 +513,7 @@ function paramV () {
 
 function paramU () {
 	nome="fase=$fase; paramU"
-	#nome=""
+	nome=""
 	NomeFase
 	Parametro
 	linhaUVW
@@ -1036,6 +1050,7 @@ function verifcdopagem () {
 }
 
 function Parametro_Biso () {
+	OCC_MODE=1
 	COND=1 # Entrou na Parte de Fazer Condições - Modo de saida Diferente dos Demais
 	COND1=1 # Para evitar entrar no Passo quando o COND = 0!!
 	linhaNat
@@ -1069,6 +1084,15 @@ function Parametro_Biso () {
 			Cont_Linha=$((Cont_Linha+1))
 			LOC_Val=$(echo $LOC_Val_Atom_inicial)
 		done
+		
+		if [[ -f Cond.dat ]];then
+			i=$(sort -g -k 2 Cond.dat | cut -f1 -d ";" | head -1)
+			CHI=$(sort -g -k 2 Cond.dat | cut -f2 -d ";" | head -1)
+			recuperecpCOND
+			cpOK
+			rm -f *-COND* Cond.dat
+		fi
+		
 		linhaATOM
 		echo -e "\n\033[02;32mMelhor Biso do Átomo $CalVal1 da fase $fase foi de: $CalVal6 com Chi² = \033[02;34;1m$CHI\033[02;32m.\033[0m\n"
 		COND=0
@@ -1252,6 +1276,7 @@ function Parametro_Biso1 () {
 			linhaATOM
 			AtomNumero=$((AtomNumero +1))
 		done
+		OCC_MODE=0
 }
 
 function Parametro_Termico () {
@@ -1346,7 +1371,7 @@ function Parametro_Ocupacao1 () {
 			OCC_MAX_Min=-20
 		else
 #			OCC_MAX=1.05
-			OCC_MIN=0.5
+			OCC_MIN=0.8 #0.5
 			OCC_MAX=1
 			OCC_MAX_M=0
 			OCC_MAX_Min=-50
@@ -1364,10 +1389,12 @@ function Parametro_Ocupacao1 () {
 				linhaATOM
 				if [[ $Contagem_Atomo == 0 ]]; then
 					LINHA_Val=$(echo  $CalVal1 $CalVal2 $CalVal3  $CalVal4 $CalVal5 $CalVal6 $(echo "scale=5; $CalVal7*$i"  | bc ) $CalVal8 $CalVal9 $CalVal10 $CalVal11 )
+					
 					sed -i "$LOC_Val s/.*/$LINHA_Val/" $(echo $ArqNome).pcr
 					Diff_Occ=$(echo "scale=5; $CalVal7 - $CalVal7*$i"  | bc )
 				else
 					LINHA_Val=$(echo  $CalVal1 $CalVal2 $CalVal3  $CalVal4 $CalVal5 $CalVal6 $(echo "scale=5; $CalVal7 + ($Diff_Occ/$AtomIguais)"  | bc ) $CalVal8 $CalVal9 $CalVal10 $CalVal11 )
+
 					sed -i "$LOC_Val s/.*/$LINHA_Val/" $(echo $ArqNome).pcr
 				fi
 
