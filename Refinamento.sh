@@ -182,6 +182,7 @@ function Criando_Files (){
   cp $CaminhoScript/DRX.plt .
 	cp $CaminhoScript/Refinamento.plt .
 	cp $CaminhoScript/Size.plt .
+	cp $CaminhoScript/DRXH57.irf .
 	Criando_Files
 
 	if [[ $# -ne 4 ]];	then

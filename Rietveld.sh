@@ -31,7 +31,7 @@ LeBail=0 # Modo LeBail Desligado - Metodo Rietvel Ligado!!
 
 # Descobrindo os valores da linha # !Job Npr Nph Nba Nex Nsc Nor Dum Iwg Ilo Ias Res Ste Nre Cry Uni Cor Opt Aut - Para descobrir a quantidade de Fases 
 	linhaJob 
-	LinhaJob=$(echo $ColJob1 $ColJob2 $ColJob3 $ColJob4 $ColJob5 $ColJob6 $ColJob7 1 $ColJob9 $ColJob10 1 $ColJob12 $ColJob13 $ColJob14 $ColJob15 $ColJob16 $ColJob17 1 1 )
+	LinhaJob=$(echo $ColJob1 $ColJob2 $ColJob3 $ColJob4 $ColJob5 $ColJob6 $ColJob7 1 $ColJob9 $ColJob10 1 1 $ColJob13 $ColJob14 $ColJob15 $ColJob16 $ColJob17 1 1 )
 	sed -i "$LOCJob s/.*/$LinhaJob/" $(echo $ArqNome).pcr
 	linhaJob
 # Aut = 1 - Liberdade para mudar os parâmetros!!
@@ -88,7 +88,13 @@ LeBail=0 # Modo LeBail Desligado - Metodo Rietvel Ligado!!
 #		fase=$((fase +1))
 #	done
 #	fase=1
+	Cristalito=$(grep "Resolution file for Pattern" $(echo $ArqNome).pcr)
+	if [[ -z "$Cristalito" ]] ; then
+		sed -i '7i \!  Resolution file for Pattern#   1' $(echo $ArqNome).pcr
+		sed -i '8i \DRXH57.irf' $(echo $ArqNome).pcr
+  fi
 	
+
 	Verif_Shape
 
 # - Salvando o PCR com as alterações iniciais

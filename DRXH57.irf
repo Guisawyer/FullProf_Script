@@ -1,0 +1,15 @@
+teste ireso    3
+!       JOBT
+JOBT XR
+!      Profile      Shape_1     Shape_2     Shape_3
+PROF      7         0.0000      0.0000      0.0000
+!         Lambda_1    Lambda_2    Ratio
+WAVE       1.5406      1.5443      0.5000
+!   Geometry Type
+GEOM DEBY
+!       Cos(TwoThetaMonochromator)^2
+CTHM       0.9100
+!         S_L         S_D
+ASYM       0.0000      0.0000
+!    U-inst      V-inst      W-inst      X-inst     Y-inst     Z-inst
+     0.006872  -0.019632   0.017920   0.019122   0.046185    0.00000
