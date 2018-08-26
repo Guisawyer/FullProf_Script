@@ -173,6 +173,7 @@ function Criando_Files (){
 		done
 	fase=1
 
+	rm -f Erro*.sh
 
 	mkdir -p PCR-Bkp
 	cp $ArqNome.pcr PCR-Bkp
@@ -181,6 +182,7 @@ function Criando_Files (){
   cp $CaminhoScript/DRX.plt .
 	cp $CaminhoScript/Refinamento.plt .
 	cp $CaminhoScript/Size.plt .
+
 	Criando_Files
 
 	if [[ $# -ne 4 ]];	then

@@ -18,7 +18,7 @@ set style line 1       lc rgb "#0000FF"    lw 2           # Cor da Linha
 set style line 2       lc rgb "#006B3C"    lw 2 lt 6      # Cor dos Pontos
 
 L = 0.154056 * 10**(-9)
-k= 0.91
+k= 0.98
 f(x) = (a + b*x)*1000
  
 fit f(x) "XXXX.txt"  u ($1):($2*1000) via a, b  

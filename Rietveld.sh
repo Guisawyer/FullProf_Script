@@ -88,7 +88,18 @@ LeBail=0 # Modo LeBail Desligado - Metodo Rietvel Ligado!!
 #		fase=$((fase +1))
 #	done
 #	fase=1
+	Cristalito=$(grep "Resolution file for Pattern" $(echo $ArqNome).pcr)
+	if [[ -z "$Cristalito" && $ColJob2 == 7 ]] ; then
+		linhaJob 
+		LinhaJob=$(echo $ColJob1 $ColJob2 $ColJob3 $ColJob4 $ColJob5 $ColJob6 $ColJob7 1 $ColJob9 $ColJob10 1 1 $ColJob13 $ColJob14 $ColJob15 $ColJob16 $ColJob17 1 1 )
+		sed -i "$LOCJob s/.*/$LinhaJob/" $(echo $ArqNome).pcr
+		linhaJob
+		sed -i '7i \!  Resolution file for Pattern#   1' $(echo $ArqNome).pcr
+		sed -i '8i \DRXH57.irf' $(echo $ArqNome).pcr
+		cp $CaminhoScript/DRXH57.irf .
+  fi
 	
+
 	Verif_Shape
 
 # - Salvando o PCR com as alterações iniciais
