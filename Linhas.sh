@@ -105,12 +105,13 @@ function VEC_linhaNat (){
 
 	VEC_LinhaNat=$(sed -n ${VEC_LOCNat}p $(echo $ArqNome).pcr ) 
 	VEC_ColNat1=$(echo $VEC_LinhaNat | cut -f1 -d" ") #Nat
-
+	VEC_ColNat7=$(echo $VEC_LinhaNat | cut -f7 -d" ") #Jbt
 }
 
 
 function Val (){
 	LINHA_Val=$(sed -n ${LOC_Val}p $(echo $ArqNome).pcr)
+	Contagem_Val=$(sed -n ${LOC_Val}p $(echo $ArqNome).pcr | wc -w )
 	CalVal1=$(echo $LINHA_Val | cut -f1 -d" ")
 	CalVal2=$(echo $LINHA_Val | cut -f2 -d" ")	 
 	CalVal3=$(echo $LINHA_Val | cut -f3 -d" ")	 
@@ -122,10 +123,12 @@ function Val (){
 	CalVal9=$(echo $LINHA_Val | cut -f9 -d" ")
 	CalVal10=$(echo $LINHA_Val | cut -f10 -d" ")
 	CalVal11=$(echo $LINHA_Val | cut -f11 -d" ")
+	CalVal12=$(echo $LINHA_Val | cut -f12 -d" ")
 }
 
 function Param (){
 	LINHA_Parm=$(sed -n ${LOC_Parm}p $(echo $ArqNome).pcr)
+	Contagem_Parm=$(sed -n ${LOC_Parm}p $(echo $ArqNome).pcr | wc -w )
 	CalParam1=$(echo $LINHA_Parm | cut -f1 -d" ")  
 	CalParam2=$(echo $LINHA_Parm | cut -f2 -d" ")  
 	CalParam3=$(echo $LINHA_Parm | cut -f3 -d" ")  
@@ -137,6 +140,7 @@ function Param (){
 	CalParam9=$(echo $LINHA_Parm | cut -f9 -d" ")  
 	CalParam10=$(echo $LINHA_Parm | cut -f10 -d" ")  
 	CalParam11=$(echo $LINHA_Parm | cut -f11 -d" ")  
+	CalParam12=$(echo $LINHA_Parm | cut -f12 -d" ")  
 }
 
 function linhaZERO () {
@@ -234,6 +238,9 @@ function linhaNUMATOM () {
 	LOC2=$(grep -n "Profile Parameters" $(echo $ArqNome).pcr | cut -f1 -d":" | sed -n ${fase}p )
 	LOC_Val_ATOM2=$((LOC2 - 1))
 }
+
+
+
 
 function linhaATOM (){
 	Nome_Parametro=(X Y Z Biso Occ)
@@ -426,11 +433,11 @@ function Parametro_5_5 (){ # Primeiro Parâmetro de 6
 	sed -i "$LOC_Parm s/.*/$LINHA_Parm/" $(echo $ArqNome).pcr
 }
 
-function Parametro_0_6 (){ # Primeiro Parâmetro de 6
+function Parametro_0_6_1 (){ # Primeiro Parâmetro de 6
 	LINHA_Parm=$(echo $CalParam1  0.00  0.00  0.00  0.00  0.00 )
 	sed -i "$LOC_Parm s/.*/$LINHA_Parm/" $(echo $ArqNome).pcr
 }
-function Parametro_0_6_1 (){ # Primeiro Parâmetro de 6
+function Parametro_0_6 (){ # Primeiro Parâmetro de 6
 	LINHA_Parm=$(echo 0.00  0.00  0.00  0.00  0.00  0.00 )
 	sed -i "$LOC_Parm s/.*/$LINHA_Parm/" $(echo $ArqNome).pcr
 }

@@ -46,7 +46,7 @@
 	sed -i "28 s/set xrange.*/set xrange [$XRange_Min:$XRange_Max]/" Refinamento.plt
 	sed -i "29 s/set xtics.*/set xtics $XTICS in nomirror /" Refinamento.plt
 	sed -i "34 s/.*/$(cat graf_temp_zoom) /" Refinamento.plt
-	gnuplot Refinamento.plt
+	gnuplot Refinamento.plt &> /dev/null
 
 	fase=$fase_temp
 

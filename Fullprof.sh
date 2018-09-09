@@ -24,6 +24,7 @@ OCC_MODE=0
 Finalizar_VEC=0
 ParamUVW=0
 
+
 function MsgErro(){
 	echo -e "\033[01;31m$1\033[0m" 
 }
@@ -67,13 +68,128 @@ function Salve_Erros () {
 	fi
 }
 
+function Verif_Cont () {
+		faseAA=$fase
+		LOC_Val_refA=$LOC_Val 
+	  LOC_Parm_refA=$LOC_Parm 
+	  NomePRefA=${Nome_Parametro[@]}
+		fase=1
+		rm -f Contagem1.txt
+	while [ $fase -le $ColJob3 ] ; do
+  	linhaABC 
+		echo $Contagem_Val  >> Contagem1.txt
+	  linhaSCALE
+		echo $Contagem_Val >> Contagem1.txt
+		linhaPREF
+		echo $Contagem_Val >> Contagem1.txt
+		linhaUVW
+		echo $Contagem_Val >> Contagem1.txt
+		linhaNat
+		XXYY=1
+		linhaNUMATOM
+		while [ $XXYY -le $ColNat1 ] ;do
+			linhaATOM
+			echo $Contagem_Val >> Contagem1.txt
+			LOC_Val=$((LOC_Val + (2+ 2*BETA) ))
+			XXYY=$((XXYY+1))
+		done
+		fase=$((fase+1))
+	done
+		fase=$faseAA
+		LOC_Val=$LOC_Val_refA 
+	  LOC_Parm=$LOC_Parm_refA
+	  Nome_Parametro=${NomePRefA[@]}
+		
+ContagemVec=$(diff Contagem1.txt Contagem.txt)
+	if [[ -z $ContagemVec ]] ; then
+		Contagem=1 # Ok
+	else
+		Contagem=0 # Errado
+	fi
 
-function Verif_Shape (){
-	if [ $ColJob2 != 7 ] ; then  
+}
+
+function ZerarParam () {
+	LOCBaCk=$(grep -n "2Theta/TOF/" $(echo $ArqNome).pcr | cut -f1 -d":")
+	LOCBaCk=$((LOCBaCk + 1))
+	X=1
+	while [[ $X -le $ColJob4 ]] ; do
+		LINHAback=$(sed -n ${LOCBaCk}p $(echo $ArqNome).pcr)
+		BACK1=$(echo $LINHAback | cut -f1 -d" ")
+		BACK2=$(echo $LINHAback | cut -f2 -d" ")
+		BACK3=$(echo $LINHAback | cut -f3 -d" ")
+		LINHAback=$(echo $BACK1 $BACK2 0.000 )
+		sed -i "$LOCBaCk s/.*/$LINHAback/" $(echo $ArqNome).pcr
+		X=$((X + 1))
+		LOCBaCk=$((LOCBaCk + 1))
+	done
+		linhaZERO 
+		Parametro_0_9
+
 		faseA=$fase
 		LOC_Val_ref=$LOC_Val 
 	  LOC_Parm_ref=$LOC_Parm 
 	  NomePRef=${Nome_Parametro[@]}
+		fase=1
+	while [ $fase -le $ColJob3 ] ; do
+  	linhaABC 
+		Parametro_0_$Contagem_Parm
+	  linhaSCALE
+		if [ $RUN == 0 ]; then
+			if [ $fase == 1 ] ; then
+				Parametro_0_6_1
+			else
+				Parametro_0_$Contagem_Parm
+			fi
+		else
+			Parametro_0_6_1
+		fi
+		linhaPREF
+		Parametro_0_$Contagem_Parm
+		linhaUVW
+		Parametro_0_$Contagem_Parm
+		linhaNat
+		XXYY=1
+		linhaNUMATOM
+		while [ $XXYY -le $ColNat1 ] ;do
+			linhaATOM
+			Parametro_0_$Contagem_Parm
+			LOC_Parm=$((LOC_Parm + (2+ 2*BETA) ))
+			XXYY=$((XXYY+1))
+		done
+		fase=$((fase+1))
+	done
+		fase=$faseA
+		LOC_Val=$LOC_Val_ref 
+	  LOC_Parm=$LOC_Parm_ref
+	  Nome_Parametro=${NomePRef[@]}
+}
+
+
+function ZerarUVW () {
+		faseA=$fase
+		LOC_Val_ref=$LOC_Val 
+	  LOC_Parm_ref=$LOC_Parm 
+	  NomePRef=${Nome_Parametro[@]}
+		fase=1
+	while [ $fase -le $ColJob3 ] ; do
+ 		linhaUVW
+		Parametro_0_$Contagem_Parm
+		fase=$((fase+1))
+	done
+		fase=$faseA
+		LOC_Val=$LOC_Val_ref 
+	  LOC_Parm=$LOC_Parm_ref
+	  Nome_Parametro=${NomePRef[@]}
+}
+
+
+function Verif_Shape (){
+	if [ $ColJob2 != 7 ] ; then  
+		faseAB=$fase
+		LOC_Val_refB=$LOC_Val 
+	  LOC_Parm_refB=$LOC_Parm 
+	  NomePRefB=${Nome_Parametro[@]}
 		fase=1
 		while [ $fase -le $ColJob3 ] ; do
 			linhaSCALE
@@ -90,45 +206,49 @@ function Verif_Shape (){
 			fi
 			fase=$((fase +1))
 		done
-		fase=$faseA
-		LOC_Val=$LOC_Val_ref 
-	  LOC_Parm=$LOC_Parm_ref
-	  Nome_Parametro=${NomePRef[@]}
+		fase=$faseAB
+		LOC_Val=$LOC_Val_refB 
+	  LOC_Parm=$LOC_Parm_refB
+	  Nome_Parametro=${NomePRefB[@]}
 	fi
 }
 function Vec_Pos_Atomica () {
-	faseA=$fase
+	faseAC=$fase
 	fase=1
 	while [ $fase -le $ColJob3 ] ; do
 		VEC_linhaNat
-		VEC_linhaNUMATOM
-		VEC_linhaATOM
-		VEC_AtomNumero=1
-		while [ $VEC_AtomNumero -le $VEC_ColNat1 ] ; do
+		if [ $VEC_ColNat7 == 0 ] ; then
+			VEC_linhaNUMATOM
+			VEC_linhaATOM
+			VEC_AtomNumero=1
+			while [ $VEC_AtomNumero -le $VEC_ColNat1 ] ; do
 		
 		
-		if [[ $(echo "scale=4; $(echo $VEC_ColAtom3 | wc -c)  > 9 " | bc -l  ) -eq 1 || $(echo "scale=4; $(echo $VEC_ColAtom4 | wc -c)  > 9 " | bc     -l  ) -eq 1 || $(echo "scale=4; $(echo $VEC_ColAtom5 | wc -c)  > 9 " | bc -l  ) -eq 1 ]] ;then
-			Pos_Atomic_Exc=1
-			if [[ $RUN == 0 ]]; then
-					MsgErro "Verifeque seu PCR. Existem posições Atômicas com valores Estranhos!!" 
-					exit 1
-			fi
-		else
-			if [[ $(echo "scale=4; $VEC_ColAtom3  > 1.2 " | bc -l ) -eq 1 || $(echo "scale=4; $VEC_ColAtom4  > 1.2 " | bc -l ) -eq 1 || $(echo "scale=4; $VEC_ColAtom5  > 1.2 " | bc -l ) -eq 1 ]];then
+			if [[ $(echo "scale=4; $(echo $VEC_ColAtom3 | wc -c)  > 9 " | bc -l  ) -eq 1 || $(echo "scale=4; $(echo $VEC_ColAtom4 | wc -c)  > 9 " | bc     -l  ) -eq 1 || $(echo "scale=4; $(echo $VEC_ColAtom5 | wc -c)  > 9 " | bc -l  ) -eq 1 ]] ;then
 				Pos_Atomic_Exc=1
 				if [[ $RUN == 0 ]]; then
-					MsgErro "Verifeque seu PCR. Existem posições Atômicas com valores maiores que 1.2!!" 
-					exit 1
+						MsgErro "Verifeque seu PCR. Existem posições Atômicas com valores Estranhos!!" 
+						exit 1
+				fi
+			else
+				if [[ $(echo "scale=4; $VEC_ColAtom3  > 1.2 " | bc -l ) -eq 1 || $(echo "scale=4; $VEC_ColAtom4  > 1.2 " | bc -l ) -eq 1 || $(echo "scale=4; $VEC_ColAtom5  > 1.2 " | bc -l ) -eq 1 ]];then
+					Pos_Atomic_Exc=1
+					if [[ $RUN == 0 ]]; then
+						MsgErro "Verifeque seu PCR. Existem posições Atômicas com valores maiores que 1.2!!" 
+						exit 1
+					fi
 				fi
 			fi
+				VEC_LOC_Val_Atom=$((VEC_LOC_Val_Atom + (2+ 2*VEC_BETA) ))
+				VEC_linhaATOM
+				VEC_AtomNumero=$((VEC_AtomNumero +1))
+			done
 		fi
-			VEC_LOC_Val_Atom=$((VEC_LOC_Val_Atom + (2+ 2*VEC_BETA) ))
-			VEC_linhaATOM
-			VEC_AtomNumero=$((VEC_AtomNumero +1))
-		done
+
 		fase=$((fase +1))
+	
 	done
-	fase=$faseA
+	fase=$faseAC
 }
 
 
@@ -187,7 +307,7 @@ function convergencia () {
 			rm $(echo $ArqNome).pcr
 			mv $(echo $ArqNome).new $(echo $ArqNome).pcr
 		fi
-		if [[ $Run_OK == 1 ]]; then
+		if [[ $Run_OK == $Quantidade ]]; then
 			RUN=$((RUN +1 ))
 			echo -e "\n   \033[02;34mConvergiu com Chi² = $CHI\033[0m\n"
 			cpOK
@@ -230,18 +350,19 @@ function verificar () {
 
 	if [[ -f $(echo $ArqNome).new ]] ;then  # Verificando se Deu NaN no .new
 		NaN2=$(grep "NaN" $(echo $ArqNome).new )
+
 		if [[ -n $NaN2 ]];then  ## Se Der NaN Já deleta o Arquivo para n da erros futuros!!
 			rm $(echo $ArqNome).new
 		else
 			mv $(echo $ArqNome).new $(echo $ArqNome).pcr
 		fi
 	fi
-
+  Verif_Cont 
 	Asterisco=$(grep "\*" $(echo $ArqNome).pcr)
 	NegativeGAUSSIAN=$(grep "Negative GAUSSIAN" saida)
 	Fractional=$(grep "Fractional coordidate of atom" saida)
-
-	if [[ -z $Asterisco ]]; then
+	Reflections=$(grep "=>Sum(Iobs)=0" saida)
+	if [[ -z $Asterisco ]]; then 
 		if [[ $RUN == 0 || $Shape_Mode == 1 ]]; then
 			Verif_Shape
 		fi
@@ -250,7 +371,7 @@ function verificar () {
 		fi
 	fi
 	
-	if [[ -n "$normal_end" && -z "$NaN" && -z "$NaN2" && "$Vec_Shape_Val" == 0 && "$Verif_Biso_Val" == 0 && -z "$NegativeGAUSSIAN" && -z "$Fractional" && "$Pos_Atomic_Exc" == 0 && -z "$Asterisco" ]] ;	then
+	if [[ -n "$normal_end" && -z "$NaN" && -z "$NaN2" && "$Vec_Shape_Val" == 0 && "$Verif_Biso_Val" == 0 && -z "$NegativeGAUSSIAN" && -z "$Fractional" && "$Pos_Atomic_Exc" == 0 && -z "$Asterisco" && -z $Reflections && $Contagem == 1 ]] ;	then
 		conv=$(grep "Convergence reached" saida)
 
 		if [[ -n $conv ]] ;	then 
@@ -326,8 +447,37 @@ function verificar () {
 
 function fullprof () {
 	Run_OK=0
-	while [ $Run_OK -le 1 ]; do
-		fp2k $(echo $ArqNome) > saida
+	while [ $Run_OK -le $Quantidade ]; do
+		fp2k $(echo $ArqNome) > saida &
+
+		TempoTrava=0
+		TesteTravamento=$(grep "END" saida)
+		while [ -z "$TesteTravamento" ] ; do
+			sleep 1
+#			NaN=$(grep "NaN" saida)
+#			if  [[ -n $NaN ]] ; then 
+#				killall fp2k  &> /dev/null
+#				recuperecpOK
+#				break
+#			else
+			
+				TempoTrava=$((TempoTrava + 1 ))
+				#echo $TempoTrava
+				if  [[ $TempoTrava  ==  180 ]] ; then 
+					TesteparaKill=$(ps -ef | grep "fp2k $ArqNome")
+					if  [[ -n $TesteparaKill ]] ; then 
+						killall fp2k  &> /dev/null
+					fi
+					echo -e "\033[02;31mTravou o Fullprof\033[0m"
+					recuperecpOK
+					break
+				fi
+#			fi
+		TesteTravamento=$(grep "END" saida)
+#		echo $TesteTravamento
+#		exit 1
+		done
+
 	if [[ $Debug == 1 ]]; then
   	grep -B 15 CPU saida    # Verificar a saida
     grep -B 7 overlap saida # Verificar a saida
@@ -433,10 +583,13 @@ function escala () {
 
 function ESCALA () {
 	fase=1
-	while [ $fase -le $ColJob3 ] ; do
-		escala
-		fase=$((fase +1))
-	done
+		while [ $fase -le $ColJob3 ] ; do
+			linhaNat
+				if [[ $ColNat7 != 2 ]] ; then
+					escala
+				fi			
+			fase=$((fase +1))
+		done
 }
 
 
@@ -450,7 +603,32 @@ function paramA () {
 	NomeFase
 	Parametro
 	linhaABC
-	Rodar $CalParam1 MsgFunc1 ${Nome_Parametro[0]} Parametro_1_6 linhaABC Parametro_0_6_1
+	if [ $EstruMag == 0 ] ; then
+		Rodar $CalParam1 MsgFunc1 ${Nome_Parametro[0]} Parametro_1_6 linhaABC Parametro_0_6_1
+	else
+		Vec_temp=$(echo $CalParam1 | cut -f1 -d".")
+		if [[ $Vec_temp == 0 ]] ; then
+			if [[ $passo == 0 ]] ; then
+				MsgFunc1 ${Nome_Parametro[0]}
+			else
+				MsgPasso $conta_passo
+			fi
+			Parametro_1_6
+			faseA=$fase
+			fase=$((faseA + 1))
+			while [ $fase -le $ColJob3 ] ; do
+			linhaNat
+#			echo $ColNat7
+				if [ $ColNat7 == -1 ] ; then
+				linhaABC
+				Parametro_1_6
+				fi
+				fase=$((fase +1))
+			done
+			fase=$faseA
+			fullprof
+		fi
+	fi
 }
 
 # Parametros de Rede b
@@ -459,7 +637,33 @@ function paramB (){
 	NomeFase
 	Parametro
 	linhaABC
-	Rodar $CalParam2 MsgFunc1 ${Nome_Parametro[1]} Parametro_2_6 linhaABC Parametro_0_6_1
+if [ $EstruMag == 0 ] ; then
+		Rodar $CalParam2 MsgFunc1 ${Nome_Parametro[1]} Parametro_2_6 linhaABC Parametro_0_6_1
+	else
+		Vec_temp=$(echo $CalParam2 | cut -f1 -d".")
+		if [[ $Vec_temp == 0 ]] ; then
+			if [[ $passo == 0 ]] ; then
+				MsgFunc1 ${Nome_Parametro[1]}
+			else
+				MsgPasso $conta_passo
+			fi
+			Parametro_2_6
+			faseA=$fase
+			fase=$((faseA + 1))
+			while [ $fase -le $ColJob3 ] ; do
+			linhaNat
+#			echo $ColNat7
+				if [ $ColNat7 == -1 ] ; then
+				linhaABC
+				Parametro_2_6
+				fi
+				fase=$((fase +1))
+			done
+			fase=$faseA
+			fullprof
+		fi
+	fi
+
 }
 
 # Parametros de Rede c
@@ -468,16 +672,45 @@ function paramC (){
 	NomeFase
 	Parametro
 	linhaABC
+if [ $EstruMag == 0 ] ; then
 	Rodar $CalParam3 MsgFunc1 ${Nome_Parametro[2]} Parametro_3_6 linhaABC Parametro_0_6_1
+	else
+		Vec_temp=$(echo $CalParam3 | cut -f1 -d".")
+		if [[ $Vec_temp == 0 ]] ; then
+			if [[ $passo == 0 ]] ; then
+				MsgFunc1 ${Nome_Parametro[2]}
+			else
+				MsgPasso $conta_passo
+			fi
+			Parametro_3_6
+			faseA=$fase
+			fase=$((faseA + 1))
+			while [ $fase -le $ColJob3 ] ; do
+			linhaNat
+#			echo $ColNat7
+				if [ $ColNat7 == -1 ] ; then
+				linhaABC
+				Parametro_3_6
+				fi
+				fase=$((fase +1))
+			done
+			fase=$faseA
+			fullprof
+		fi
+	fi
+
 }
 
 
 function PARAMETROS_REDE () {
 	fase=1
 	while [ $fase -le $ColJob3 ] ; do
-		paramA
-		paramB
-		paramC
+		linhaNat
+		if [ $ColNat7 != -1 ] ; then
+			paramA
+			paramB
+			paramC
+		fi
 		fase=$((fase +1))
 	done
 }
@@ -488,7 +721,7 @@ function PARAMETROS_REDE () {
 
 function paramW () {
 	nome="fase=$fase; paramW"
-  nome=""
+#  nome=""
 	NomeFase
 	Parametro
 	linhaUVW
@@ -501,7 +734,7 @@ function paramW () {
 
 function paramV () {
 	nome="fase=$fase; paramV"
-  nome=""
+ # nome=""
 	NomeFase
 	Parametro
 	linhaUVW
@@ -514,7 +747,7 @@ function paramV () {
 
 function paramU () {
 	nome="fase=$fase; paramU"
-	nome=""
+#	nome=""
 	NomeFase
 	Parametro
 	linhaUVW
@@ -546,7 +779,9 @@ function paramUVWZERAR () {
 }
 
 function PARAMETROS_UVW () {
-	ParamUVW=1
+	if [[ $Travar_UVW == 1 ]] ; then
+		ParamUVW=1
+	fi
 	fase=1
 	while [ $fase -le $ColJob3 ] ; do
 		paramW
@@ -839,9 +1074,14 @@ function paramBack () {
 		paramBack5
 		paramBack6
 	else
-		#nome=paramBack
-		nome=""
+		nome=paramBack
+	#	nome=""
 		Parametro
+		if [[ $passo == 0 ]] ; then
+			echo -e "\033[02;32mRefinando os $ColJob4 parâmetros do Background\033[0m"
+		else
+			MsgPasso $conta_passo
+		fi
 		while [[ $X -le $ColJob4 ]] ; do
 			LINHAback=$(sed -n ${LOCBaCk}p $(echo $ArqNome).pcr)
 			BACK1=$(echo $LINHAback | cut -f1 -d" ")
@@ -853,34 +1093,35 @@ function paramBack () {
 			LOCBaCk=$((LOCBaCk + 1))
 			PP=$(echo "scale=2; $PP + 10 " | bc )
 		done
-		if [[ $passo == 0 ]] ; then
-			echo -e "\033[02;32mRefinando os $ColJob4 parâmetros do Background\033[0m"
-		else
-			MsgPasso $conta_passo
-		fi
+
+
 		fullprof
-		if [[ $Verif_Chi_Valor == 0 ]] ; then
-			LOCBaCk=$(grep -n "2Theta/TOF/" $(echo $ArqNome).pcr | cut -f1 -d":")
-			LOCBaCk=$((LOCBaCk + 1))
-			X=1
-			if [[ $Finalizar_VEC == 0 ]] ; then
-				while [[ $X -le $ColJob4 ]] ; do
-					LINHAback=$(sed -n ${LOCBaCk}p $(echo $ArqNome).pcr)
-					BACK1=$(echo $LINHAback | cut -f1 -d" ")
-					BACK2=$(echo $LINHAback | cut -f2 -d" ")
-					BACK3=$(echo $LINHAback | cut -f3 -d" ")
-					LINHAback=$(echo $BACK1 $BACK2 0.000 )
-					sed -i "$LOCBaCk s/.*/$LINHAback/" $(echo $ArqNome).pcr
-					X=$((X + 1))
-					LOCBaCk=$((LOCBaCk + 1))
-				done
-			
-				ParNumber=$(grep -n "Number" $(echo $ArqNome).pcr | cut -f1 -d":")
-				NumParAtual=$(grep  "\!Number of" $(echo $ArqNome).pcr | cut -f1 -d"!")
-				NumParAtual=$((NumParAtual-ColJob4))
-				sed -i "$ParNumber s/.*/      $NumParAtual    !Number of refined parameters/" $(echo $ArqNome).pcr		
-				echo -e "\033[02;32mTravando os Parâmetros do Background. Refinando...\033[0m"
-				fullprof
+	
+		if [[ $Travar_Back == 1 ]]  ; then
+			if [[ $Verif_Chi_Valor == 0 ]] ; then
+				LOCBaCk=$(grep -n "2Theta/TOF/" $(echo $ArqNome).pcr | cut -f1 -d":")
+				LOCBaCk=$((LOCBaCk + 1))
+				X=1
+
+					if [[ $Finalizar_VEC == 0 ]] ; then
+						while [[ $X -le $ColJob4 ]] ; do
+							LINHAback=$(sed -n ${LOCBaCk}p $(echo $ArqNome).pcr)
+							BACK1=$(echo $LINHAback | cut -f1 -d" ")
+							BACK2=$(echo $LINHAback | cut -f2 -d" ")
+							BACK3=$(echo $LINHAback | cut -f3 -d" ")
+							LINHAback=$(echo $BACK1 $BACK2 0.000 )
+							sed -i "$LOCBaCk s/.*/$LINHAback/" $(echo $ArqNome).pcr
+							X=$((X + 1))
+							LOCBaCk=$((LOCBaCk + 1))
+						done
+
+							ParNumber=$(grep -n "Number" $(echo $ArqNome).pcr | cut -f1 -d":")
+							NumParAtual=$(grep  "\!Number of" $(echo $ArqNome).pcr | cut -f1 -d"!")
+							NumParAtual=$((NumParAtual-ColJob4))
+							sed -i "$ParNumber s/.*/      $NumParAtual    !Number of refined parameters/" $(echo $ArqNome).pcr		
+							echo -e "\033[02;32mTravando os Parâmetros do Background. Refinando...\033[0m"
+							fullprof
+					fi
 			fi
 		fi
 	fi
@@ -910,15 +1151,37 @@ function EIXO_X () {
 	Vec_temp=$(echo $CalParam1 | cut -f1 -d".")
 	Pos_Especial $CalVal3
 	if [[ $Vec_temp == 0 && $Pos_ESP == 0 ]] ; then
-#		if [[ $passo == 0 ]] ; then
-#			MsgFunc3 "X"
-#		else
-#			MsgPasso $conta_passo
-#		fi
-#		LINHA_Parm_Atom=$(echo $(echo $PP) $CalValP2 $CalValP3 $CalValP4 $CalValP5)
-#		sed -i "$LOC_Parm_Atom s/.*/$LINHA_Parm_Atom/" $(echo $ArqNome).pcr
-#		fullprof
-	Rodar $CalParam1 MsgFunc3 ${Nome_Parametro[0]} Parametro_1_5 linhaATOM Parametro_0_5 
+		if [ $EstruMag == 0 ] ; then
+			Rodar $CalParam1 MsgFunc3 ${Nome_Parametro[0]} Parametro_1_5 linhaATOM Parametro_0_5 
+		else
+			if [[ $passo == 0 ]] ; then
+				MsgFunc3 "X"
+			else
+				MsgPasso $conta_passo
+			fi
+			Parametro_1_5
+			faseA=$fase
+			fase=$((faseA + 1))
+			while [ $fase -le $ColJob3 ] ; do
+			linhaNat
+			linhaNUMATOM
+#			echo $ColNat7
+			if [ $ColNat7 == -1 ] ; then
+				Cont_Atom_Mag=1
+				while [ $Cont_Atom_Mag -le $ColNat1 ] ; do
+					linhaATOM
+					Parametro_1_8
+					LOC_Parm=$((LOC_Parm + (2+ 2*BETA) ))
+					LOC_Val=$((LOC_Val + (2+ 2*BETA) ))
+					Cont_Atom_Mag=$((Cont_Atom_Mag+1))
+				done
+			fi
+			fase=$((fase +1))
+			done
+			fase=$faseA
+			fullprof
+		fi
+
   fi
 }
 
@@ -929,16 +1192,40 @@ function EIXO_Y () {
 	Vec_temp=$(echo $CalParam2 | cut -f1 -d".")
 	Pos_Especial $CalVal4
 	if [[ $Vec_temp == 0 && $Pos_ESP == 0 ]] ; then
-#		if [[ $passo == 0 ]] ; then
-#			MsgFunc3 "Y"
-#		else
-#			MsgPasso $conta_passo
-#		fi
-#		LINHA_Parm_Atom=$(echo $CalValP1  $(echo $PP) $CalValP3 $CalValP4 $CalValP5)
-#		sed -i "$LOC_Parm_Atom s/.*/$LINHA_Parm_Atom/" $(echo $ArqNome).pcr
-#		fullprof
-	Rodar $CalParam2 MsgFunc3 ${Nome_Parametro[1]} Parametro_2_5 linhaATOM Parametro_0_5 
+		if [ $EstruMag == 0 ] ; then
+			Rodar $CalParam2 MsgFunc3 ${Nome_Parametro[1]} Parametro_2_5 linhaATOM Parametro_0_5 
+		else
+			if [[ $passo == 0 ]] ; then
+				MsgFunc3 "Y"
+			else
+				MsgPasso $conta_passo
+			fi
+			Parametro_2_5
+			faseA=$fase
+			fase=$((faseA + 1))
+			while [ $fase -le $ColJob3 ] ; do
+			linhaNat
+			linhaNUMATOM
+#			echo $ColNat7
+			if [ $ColNat7 == -1 ] ; then
+				Cont_Atom_Mag=1
+				while [ $Cont_Atom_Mag -le $ColNat1 ] ; do
+					linhaATOM
+					Parametro_2_8
+					LOC_Parm=$((LOC_Parm + (2+ 2*BETA) ))
+					LOC_Val=$((LOC_Val + (2+ 2*BETA) ))
+					Cont_Atom_Mag=$((Cont_Atom_Mag+1))
+				done
+			fi
+			fase=$((fase +1))
+			done
+			fase=$faseA
+			fullprof
+		fi
+	
   fi
+
+
 }
 
 function EIXO_Z () {
@@ -948,16 +1235,54 @@ function EIXO_Z () {
 	Vec_temp=$(echo $CalParam3 | cut -f1 -d".")
 	Pos_Especial $CalVal5
 	if [[ $Vec_temp == 0 && $Pos_ESP == 0 ]] ; then
-#		if [[ $passo == 0 ]] ; then
-#			MsgFunc3 "Z"
-#		else
-#			MsgPasso $conta_passo
-#		fi
-#		LINHA_Parm_Atom=$(echo  $CalValP1 $CalValP2  $(echo $PP)  $CalValP4 $CalValP5)
-#		sed -i "$LOC_Parm_Atom s/.*/$LINHA_Parm_Atom/" $(echo $ArqNome).pcr
-#		fullprof
-	Rodar $CalParam3 MsgFunc3 ${Nome_Parametro[2]} Parametro_3_5 linhaATOM Parametro_0_5 
-  fi
+
+		if [ $EstruMag == 0 ] ; then
+			Rodar $CalParam3 MsgFunc3 ${Nome_Parametro[2]} Parametro_3_5 linhaATOM Parametro_0_5 
+		else
+			if [[ $passo == 0 ]] ; then
+				MsgFunc3 "Z"
+			else
+				MsgPasso $conta_passo
+			fi
+			Parametro_3_5
+			faseA=$fase
+			fase=$((faseA + 1))
+			while [ $fase -le $ColJob3 ] ; do
+			linhaNat
+			linhaNUMATOM
+#			echo $ColNat7
+			if [ $ColNat7 == -1 ] ; then
+				Cont_Atom_Mag=1
+				while [ $Cont_Atom_Mag -le $ColNat1 ] ; do
+					linhaATOM
+					Parametro_3_8
+					LOC_Parm=$((LOC_Parm + (2+ 2*BETA) ))
+					LOC_Val=$((LOC_Val + (2+ 2*BETA) ))
+					Cont_Atom_Mag=$((Cont_Atom_Mag+1))
+				done
+
+			fi
+			fase=$((fase +1))
+			done
+			fase=$faseA
+			fullprof
+		fi
+	fi
+
+
+
+
+#			Parametro_3_5
+#			faseA=$fase
+#			fase=$((faseA + 1))
+#			while [ $fase -le $ColJob3 ] ; do
+#			linhaNat
+#			LINHA_Parm_Atom=$(echo  $CalValP1 $CalValP2  $(echo $PP)  $CalValP4 $CalValP5)
+#			sed -i "$LOC_Parm_Atom s/.*/$LINHA_Parm_Atom/" $(echo $ArqNome).pcr
+
+#			fullprof
+
+  
 }
 
 function PosicaoAtomica () {
@@ -965,21 +1290,23 @@ function PosicaoAtomica () {
 	fase=1
 	while [ $fase -le $ColJob3 ] ; do
 		linhaNat
-		linhaNUMATOM
-		linhaATOM
-		AtomNumero=1
-		while [ $AtomNumero -le $ColNat1 ] ; do
-			EIXO_X
+		if [ $ColNat7 == 0 ] ; then
+			linhaNUMATOM
 			linhaATOM
-			EIXO_Y
-			linhaATOM
-			EIXO_Z
-			linhaATOM
-			LOC_Parm=$((LOC_Parm + (2+ 2*BETA) ))
-			LOC_Val=$((LOC_Val + (2+ 2*BETA) ))
-			linhaATOM
-			AtomNumero=$((AtomNumero +1))
-		done
+			AtomNumero=1
+			while [ $AtomNumero -le $ColNat1 ] ; do
+				EIXO_X
+				linhaATOM
+				EIXO_Y
+				linhaATOM
+				EIXO_Z
+				linhaATOM
+				LOC_Parm=$((LOC_Parm + (2+ 2*BETA) ))
+				LOC_Val=$((LOC_Val + (2+ 2*BETA) ))
+				linhaATOM
+				AtomNumero=$((AtomNumero +1))
+			done
+		fi
 		fase=$((fase +1))
 	done
 }
@@ -993,28 +1320,31 @@ function Verif_Biso () {
 		fase=1
 	while [ $fase -le $ColJob3 ] ; do
 		linhaNat
-		VEC_linhaNUMATOM
-		VEC_linhaATOM
-		VEC_AtomNumero=1
-		while [ $VEC_AtomNumero -le $ColNat1 ] ; do
-			if [[ $(echo "scale=5; $VEC_ColAtom6 < 0" | bc -l ) -eq 1 || $(echo "scale=5; $VEC_ColAtom6 < 0" | bc -l ) -gt 5 ]];then
-				Verif_Biso_Val=1 # Deu valor Improprio do Biso
-				if [[ $RUN == 0 ]]; then
-					echo -e "\033[01;31mBISO NEGATIVO OU ACIMA DE 5!! - MUDE ANTES DE RODA O SCRIPT\033[0m" 
-					exit 1
+		if [ $ColNat7 == 0 ] ; then
+			VEC_linhaNUMATOM
+			VEC_linhaATOM
+			VEC_AtomNumero=1
+			while [ $VEC_AtomNumero -le $ColNat1 ] ; do
+				if [[ $(echo "scale=5; $VEC_ColAtom6 < 0" | bc -l ) -eq 1 || $(echo "scale=5; $VEC_ColAtom6 < 0" | bc -l ) -gt 5 ]];then
+					Verif_Biso_Val=1 # Deu valor Improprio do Biso
+					if [[ $RUN == 0 ]]; then
+						echo -e "\033[01;31mBISO NEGATIVO OU ACIMA DE 5!! - MUDE ANTES DE RODA O SCRIPT\033[0m" 
+						exit 1
+					fi
 				fi
-			fi
-			if [[ $VEC_BETA == 1 ]];then
-				VEC_LOC_Parm_Atom=$((VEC_LOC_Parm_Atom + 4))
-				VEC_LOC_Val_Atom=$((VEC_LOC_Val_Atom + 4))
-			else
-				VEC_LOC_Parm_Atom=$((VEC_LOC_Parm_Atom + 2))
-				VEC_LOC_Val_Atom=$((VEC_LOC_Val_Atom + 2))
-			fi
-			linhaATOM
-			VEC_AtomNumero=$((VEC_AtomNumero +1))
-		done
+				if [[ $VEC_BETA == 1 ]];then
+					VEC_LOC_Parm_Atom=$((VEC_LOC_Parm_Atom + 4))
+					VEC_LOC_Val_Atom=$((VEC_LOC_Val_Atom + 4))
+				else
+					VEC_LOC_Parm_Atom=$((VEC_LOC_Parm_Atom + 2))
+					VEC_LOC_Val_Atom=$((VEC_LOC_Val_Atom + 2))
+				fi
+				linhaATOM
+				VEC_AtomNumero=$((VEC_AtomNumero +1))
+			done
+		
 		fase=$((fase +1))
+   fi
 	done
 		fase=$faseA
 }
@@ -1060,6 +1390,7 @@ function Parametro_Biso () {
 	NomeFase
 	AtomNumero=1
 	while [ $AtomNumero -le $ColNat1 ] ; do
+		TempColNat1=$ColNat1
 		NomeFase
 		MsgFunc3 "Biso" 
 		echo -e "\n\033[02;32mO Biso irá variar de 0 até 2.99988 num intervalo de 0.07692.\033[0m"
@@ -1074,6 +1405,35 @@ function Parametro_Biso () {
 				linhaATOM
 				LINHA_Val=$(echo  $CalVal1 $CalVal2 $CalVal3  $CalVal4 $CalVal5 $i $CalVal7 $CalVal8 $CalVal9 $CalVal10 $CalVal11 )
 				sed -i "$LOC_Val s/.*/$LINHA_Val/" $(echo $ArqNome).pcr
+				Antes_Pos=$(echo $CalVal3  $CalVal4 $CalVal5)
+						faseA=$fase
+							fase=$((faseA + 1))
+							while [ $fase -le $ColJob3 ] ; do
+							linhaNat
+							linhaNUMATOM
+				#			echo $ColNat7
+							if [ $ColNat7 == -1 ] ; then
+								linhaATOM
+								Depois_Pos=$(echo $CalVal5  $CalVal6 $CalVal7)
+								#echo $Depois_Pos  ---  $Antes_Pos
+								if [[ "$Antes_Pos" == "$Depois_Pos" ]]; then
+									#	echo Entrei Porra
+									Cont_Mag_Atom=1
+									while [ $Cont_Mag_Atom -le $ColNat1 ] ; do
+										LINHA_Val=$(echo  $CalVal1 $CalVal2 $CalVal3  $CalVal4 $CalVal5  $CalVal6 $CalVal7 $i $CalVal9 $CalVal10 $CalVal11 $CalVal12 )
+										sed -i "$LOC_Val s/.*/$LINHA_Val/" $(echo $ArqNome).pcr
+										Cont_Mag_Atom=$((Cont_Mag_Atom+1))
+										
+										LOC_Val=$((LOC_Val + (2+ 2*BETA) ))
+										linhaATOM
+									done
+								fi
+							fi
+							fase=$((fase +1))
+							done
+							fase=$faseA
+							linhaNat
+							linhaNUMATOM
 				LOC_Val=$((LOC_Val + (2+ 2*BETA) ))
 				Contagem_Atomo=$((Contagem_Atomo+1))
 			done
@@ -1102,6 +1462,7 @@ function Parametro_Biso () {
 		LOC_Val=$((LOC_Val + (2+ 2*BETA)*(1+AtomIguais) ))
 		linhaATOM
 		AtomNumero=$((AtomNumero +1+ 1*AtomIguais))
+		ColNat1=$TempColNat1
 	done
 }
 
@@ -1281,24 +1642,34 @@ function Parametro_Biso1 () {
 }
 
 function Parametro_Termico () {
+	ZerarUVW
 	fase=1
 	if [[ $Biso_Mode == 0 ]];then
 		linhaNUMATOM
 		while [ $fase -le $ColJob3 ] ; do
 			linhaNUMATOM
 			if [[ $BETA == 1 ]];then
-				Parametro_Beta
+					linhaNat
+					if [ $ColNat7 == 0 ] ; then
+						Parametro_Beta
+					fi
 			else
-				Parametro_Biso
+					linhaNat
+					if [ $ColNat7 == 0 ] ; then
+						Parametro_Biso
+					fi
 			fi
 			fase=$((fase+1))
 		done
 	else
 		linhaNUMATOM
 		while [ $fase -le $ColJob3 ] ; do
-			NomeFase
-			linhaNUMATOM
-			Parametro_Biso1
+			linhaNat
+			if [ $ColNat7 == 0 ] ; then
+				NomeFase
+				linhaNUMATOM
+				Parametro_Biso1
+			fi
 			fase=$((fase+1))
 		done
 	fi
@@ -1362,6 +1733,7 @@ function Parametro_Ocupacao1 () {
 	linhaATOM
 	AtomNumero=1
 	while [ $AtomNumero -le $ColNat1 ] ; do
+		TempColNat1=$ColNat1
 		I_COND_ENTRA=0 
 		verifcdopagem
 		linhaATOM
@@ -1372,7 +1744,7 @@ function Parametro_Ocupacao1 () {
 			OCC_MAX_Min=-20
 		else
 #			OCC_MAX=1.05
-			OCC_MIN=0.8 #0.5
+			OCC_MIN=0.5 #0.5
 			OCC_MAX=1
 			OCC_MAX_M=0
 			OCC_MAX_Min=-50
@@ -1390,8 +1762,39 @@ function Parametro_Ocupacao1 () {
 				linhaATOM
 				if [[ $Contagem_Atomo == 0 ]]; then
 					LINHA_Val=$(echo  $CalVal1 $CalVal2 $CalVal3  $CalVal4 $CalVal5 $CalVal6 $(echo "scale=5; $CalVal7*$i"  | bc ) $CalVal8 $CalVal9 $CalVal10 $CalVal11 )
-					
 					sed -i "$LOC_Val s/.*/$LINHA_Val/" $(echo $ArqNome).pcr
+					Pos_Correta=$(echo "scale=5; $CalVal7*$i"  | bc )
+					Antes_Pos=$(echo $CalVal3  $CalVal4 $CalVal5)
+					faseAC=$fase
+					fase=$((faseAC + 1))
+					while [ $fase -le $ColJob3 ] ; do
+						linhaNat
+						linhaNUMATOM
+			#			echo $ColNat7
+						if [ $ColNat7 == -1 ] ; then
+							linhaATOM
+							Depois_Pos=$(echo $CalVal5  $CalVal6 $CalVal7)
+							if [[ "$Antes_Pos" == "$Depois_Pos" ]]; then
+								Cont_Mag_Atom=1
+								while [ $Cont_Mag_Atom -le $ColNat1 ] ; do
+									LINHA_Val=$(echo  $CalVal1 $CalVal2 $CalVal3  $CalVal4 $CalVal5  $CalVal6 $CalVal7 $CalVal8  $Pos_Correta $CalVal10 $CalVal11 $CalVal12 )
+									sed -i "$LOC_Val s/.*/$LINHA_Val/" $(echo $ArqNome).pcr
+									Cont_Mag_Atom=$((Cont_Mag_Atom+1))
+
+									LOC_Val=$((LOC_Val + (2+ 2*BETA) ))
+									linhaATOM
+								done
+								#sed -i "$LOC_Val s/.*/$LINHA_Val/" $(echo $ArqNome).pcr
+							fi
+						fi
+						fase=$((fase +1))
+					done
+					fase=$faseAC
+					linhaNat
+					linhaNUMATOM
+
+
+
 					Diff_Occ=$(echo "scale=5; $CalVal7 - $CalVal7*$i"  | bc )
 				else
 					LINHA_Val=$(echo  $CalVal1 $CalVal2 $CalVal3  $CalVal4 $CalVal5 $CalVal6 $(echo "scale=5; $CalVal7 + ($Diff_Occ/$AtomIguais)"  | bc ) $CalVal8 $CalVal9 $CalVal10 $CalVal11 )
@@ -1426,23 +1829,31 @@ function Parametro_Ocupacao1 () {
 		LOC_Val=$((LOC_Val + (2+ 2*BETA)*(1+AtomIguais) ))
 		linhaATOM
 		AtomNumero=$((AtomNumero +1+ 1*AtomIguais))
+		ColNat1=$TempColNat1
 	done
 }
 
 function Parametro_Ocupacao () {
+	ZerarUVW
 	fase=1
 	if [[ $Ocup_Mode == 1 ]];then
 		linhaNUMATOM
 		while [ $fase -le $ColJob3 ] ; do
-			linhaNUMATOM
-			Parametro_Ocupacao2
+			linhaNat
+			if [ $ColNat7 == 0 ] ; then
+				linhaNUMATOM
+				Parametro_Ocupacao2
+			fi
 			fase=$((fase+1))
 		done
 	else
 		linhaNUMATOM
 		while [ $fase -le $ColJob3 ] ; do
-			linhaNUMATOM
-			Parametro_Ocupacao1
+			linhaNat
+			if [ $ColNat7 == 0 ] ; then
+				linhaNUMATOM
+				Parametro_Ocupacao1
+			fi
 			fase=$((fase+1))
 		done
 		fi
@@ -1993,8 +2404,10 @@ function Size_Model () {
 # Finalizando o Refinamento #
 #############################
 
-function Exec_Erros (){
 
+
+function Exec_Erros (){
+	ZerarParam
 	Erro_Erro=0
 	Verif_Chi_Valor1=0
 	Vec_Shape_Val1=0
@@ -2013,6 +2426,7 @@ function Exec_Erros (){
 			cp Erro.sh Erro2.sh 
 		fi
 	fi
+	ZerarParam
 	Erro_Erro=0
 	Verif_Chi_Valor1=0
 	Vec_Shape_Val1=0
@@ -2036,6 +2450,7 @@ function Exec_Erros (){
 			cp Erro2.sh Erro3.sh
 		fi
 	fi
+	ZerarParam
 	Erro_Erro=0
 	Verif_Chi_Valor1=0
 	Vec_Shape_Val1=0
@@ -2061,14 +2476,18 @@ function Exec_Erros (){
 		fi
 	fi
 	rm -f Erro1.sh Erro2.sh Erro3.sh Erro.sh
-
+	ZerarParam
 	Erro_Erro=0
 	Verif_Chi_Valor1=0
 	Vec_Shape_Val1=0
 	ERRO_PASSO=0
 }
 
+
+
+
 function Finalizando () {
+	ZerarParam
 	echo -e "\033[02;31;1mFINALIZANDO...\033[0m\n"
 	FINALIZAR=1
 	fullprof

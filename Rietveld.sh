@@ -54,6 +54,49 @@ LeBail=0 # Modo LeBail Desligado - Metodo Rietvel Ligado!!
 	done
 	fase=1
 
+#Verificando Se tem Estrutura Magnetica
+	EstruMag=0 
+	fase=1
+	while [ $fase -le $ColJob3 ] ; do
+	linhaNat
+	#echo $ColNat7
+		if [ $ColNat7 == -1 ] ; then
+		linhaABC
+		#echo $LOC_Parm
+		EstruMag=1 #Significa q tem Estrutura Mag
+	  fi
+		fase=$((fase +1))
+	done
+	fase=1
+
+rm -f Contagem.txt
+	fase=1
+	while [ $fase -le $ColJob3 ] ; do
+  	linhaABC 
+		echo $Contagem_Val  >> Contagem.txt
+	  linhaSCALE
+		echo $Contagem_Val >> Contagem.txt
+		linhaPREF
+		echo $Contagem_Val >> Contagem.txt
+		linhaUVW
+		echo $Contagem_Val >> Contagem.txt
+		linhaNat
+		XXYY=1
+		linhaNUMATOM
+		while [ $XXYY -le $ColNat1 ] ;do
+			linhaATOM
+			echo $Contagem_Val >> Contagem.txt
+			LOC_Val=$((LOC_Val + (2+ 2*BETA) ))
+			XXYY=$((XXYY+1))
+		done
+		fase=$((fase+1))
+	done
+
+	fase=1
+
+
+
+
 # - Zerando o ATZ - Peso Percentual de cada fase
 	while [ $fase -le $ColJob3 ] ; do
 		linhaNat
@@ -69,8 +112,15 @@ LeBail=0 # Modo LeBail Desligado - Metodo Rietvel Ligado!!
 		linhaATOM
 		AtomNumero=1
 		while [ $AtomNumero -le $ColNat1 ] ; do
-			LINHA_Val=$(echo  $CalVal1 $CalVal2 $CalVal3  $CalVal4 $CalVal5 0.00000 $CalVal7 $CalVal8 $CalVal9 $CalVal10 $CalVal11 )
+			if [ $ColNat7 == 0 ] ; then
+				LINHA_Val=$(echo  $CalVal1 $CalVal2 $CalVal3  $CalVal4 $CalVal5 0.00000 $CalVal7 $CalVal8 $CalVal9 $CalVal10 $CalVal11 )
+			elif [ $ColNat7 == -1 ] ; then
+				LINHA_Val=$(echo  $CalVal1 $CalVal2 $CalVal3  $CalVal4 $CalVal5  $CalVal6 $CalVal7 0.00000 $CalVal9 $CalVal10 $CalVal11 $CalVal12 )
+			fi
+
 			sed -i "$LOC_Val s/.*/$LINHA_Val/" $(echo $ArqNome).pcr
+
+
 			linhaATOM
 			LOC_Parm=$((LOC_Parm + (2+ 2*BETA) ))
 			LOC_Val=$((LOC_Val + (2+ 2*BETA) ))
@@ -81,6 +131,15 @@ LeBail=0 # Modo LeBail Desligado - Metodo Rietvel Ligado!!
 	done
 	fase=1
 
+#						linhaNat
+#							linhaNUMATOM
+#				#			echo $ColNat7
+#							if [ $ColNat7 == -1 ] ; then
+#								linhaATOM
+#								LINHA_Val=$(echo  $CalVal1 $CalVal2 $CalVal3  $CalVal4 $CalVal5  $CalVal6 $CalVal7 $i $CalVal9 $CalVal10 $CalVal11 $CalVal12 )
+#								sed -i "$LOC_Val s/.*/$LINHA_Val/" $(echo $ArqNome).pcr
+#							fi
+
 #	while [ $fase -le $ColJob3 ] ; do
 #		linhaUVW           
 #		LINHA_Val=$(echo 0.006872  -0.019632   0.017920  $CalVal4 $CalVal5 $CalVal6 $CalVal7 $CalVal8 )
@@ -88,19 +147,20 @@ LeBail=0 # Modo LeBail Desligado - Metodo Rietvel Ligado!!
 #		fase=$((fase +1))
 #	done
 #	fase=1
-	Cristalito=$(grep "Resolution file for Pattern" $(echo $ArqNome).pcr)
-	if [[ -z "$Cristalito" && $ColJob2 == 7 ]] ; then
-		linhaJob 
-		LinhaJob=$(echo $ColJob1 $ColJob2 $ColJob3 $ColJob4 $ColJob5 $ColJob6 $ColJob7 1 $ColJob9 $ColJob10 1 1 $ColJob13 $ColJob14 $ColJob15 $ColJob16 $ColJob17 1 1 )
-		sed -i "$LOCJob s/.*/$LinhaJob/" $(echo $ArqNome).pcr
-		linhaJob
-		sed -i '7i \!  Resolution file for Pattern#   1' $(echo $ArqNome).pcr
-		sed -i '8i \DRXH57.irf' $(echo $ArqNome).pcr
-		cp $CaminhoScript/DRXH57.irf .
-  fi
+#	Cristalito=$(grep "Resolution file for Pattern" $(echo $ArqNome).pcr)
+#	if [[ -z "$Cristalito" && $ColJob2 == 7 ]] ; then
+#		linhaJob 
+#		LinhaJob=$(echo $ColJob1 $ColJob2 $ColJob3 $ColJob4 $ColJob5 $ColJob6 $ColJob7 1 $ColJob9 $ColJob10 1 1 $ColJob13 $ColJob14 $ColJob15 $ColJob16 $ColJob17 1 1 )
+#		sed -i "$LOCJob s/.*/$LinhaJob/" $(echo $ArqNome).pcr
+#		linhaJob
+#		sed -i '7i \!  Resolution file for Pattern#   1' $(echo $ArqNome).pcr
+#		sed -i '8i \DRXH57.irf' $(echo $ArqNome).pcr
+#		cp $CaminhoScript/DRXH57.irf .
+#  fi
 	
 
 	Verif_Shape
+	ZerarParam
 
 # - Salvando o PCR com as alterações iniciais
 	cp $(echo $ArqNome).pcr PCR-Bkp/$(echo $ArqNome)-inicial.pcr
