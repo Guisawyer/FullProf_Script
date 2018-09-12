@@ -271,7 +271,7 @@ function verif_chi () {
 	else
 		Verif_Chi_Valor=0 # Deu Certo
 		Verif_Chi_Valor1=0
-		if [[ $Run_OK == 1 ]]; then
+		if [[ $Run_OK == $Quantidade ]]; then
 			if [[ $COND == 0 ]];then
 				CHI=$CHINOVO
 				echo -e "\n   \033[02;34mConvergiu com Chi² = \033[02;34;1m$CHI\033[0m\n"
