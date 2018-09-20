@@ -449,7 +449,7 @@ function fullprof () {
 	Run_OK=0
 	while [ $Run_OK -le $Quantidade ]; do
 		fp2k $(echo $ArqNome) > saida &
-
+		sleep 1
 		TempoTrava=0
 		TesteTravamento=$(grep "END" saida)
 		while [ -z "$TesteTravamento" ] ; do
@@ -463,7 +463,7 @@ function fullprof () {
 			
 				TempoTrava=$((TempoTrava + 1 ))
 				#echo $TempoTrava
-				if  [[ $TempoTrava  ==  180 ]] ; then 
+				if  [[ $TempoTrava  ==  600 ]] ; then 
 					TesteparaKill=$(ps -ef | grep "fp2k $ArqNome")
 					if  [[ -n $TesteparaKill ]] ; then 
 						killall fp2k  &> /dev/null

@@ -167,6 +167,8 @@ rm -f Contagem.txt
 	echo " " >> PCR-Bkp/README
 	echo "O Arquivo $(echo $ArqNome)-inicial.pcr - É o .prc com as devidas alterações que o próprio Script faz, MAS sem refinar." >> PCR-Bkp/README
 	echo "Somente alterando as condições iniciais se necessário." >> PCR-Bkp/README
+	EsperaPara=1
+	EsperaPara2=1
   echo -e "\033[36;2m
   ###################
   #                 #

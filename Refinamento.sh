@@ -7,6 +7,7 @@
 
 shopt -s extglob # Para poder usar o comando rm !()
 source Linhas.sh
+
 Debug=0
 ZeroPara=0
 CaminhoScript=$( which Refinamento.sh | sed "s/\/Refinamento.sh//")
@@ -132,6 +133,7 @@ function Criando_Files (){
 	esac
 
 
+
 	if [[ -e PCR-Bkp/$ArqNome.pcr  ]]
 	then
 		cp PCR-Bkp/$ArqNome.pcr .
@@ -225,8 +227,9 @@ Vec_Saida=0
 	
 				1)
 					clear
+					echo -e "\033[01;31mAguarde enquanto o Script faz os ajustes iniciais antes de iniciar o Refinamento...\033[0m"
 					T1=$(date +%s)
-					source Rietveld.sh
+					source Rietveld.sh 
 					source Ordem.sh 
 					T2=$(date +%s)
 					diffsec="$(expr $T2 - $T1)"
